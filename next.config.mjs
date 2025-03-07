@@ -12,14 +12,10 @@ export default {
     ],
   },
 
-  // Modify Webpack configuration
   webpack(config, { isServer }) {
-    // Disable CSS minification for development or production
     if (!isServer) {
       config.optimization.minimize = false;
     }
-
-    // Return the modified config
     return config;
   },
 };
