@@ -28,9 +28,10 @@
         "name": "next"
       }
     ],
+    "baseUrl": "./",  // Set the baseUrl here
     "paths": {
       "@/*": [
-        "./src/*"
+        "src/*"
       ]
     }
   },
