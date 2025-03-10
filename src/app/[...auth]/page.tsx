@@ -1,5 +1,5 @@
 
-import ForgotPassword from "@/components/ForgotPassword";
+import ForgotPassword from "../../components/ForgotPassword";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 import ResetPassword from "@/components/ResetPassword";

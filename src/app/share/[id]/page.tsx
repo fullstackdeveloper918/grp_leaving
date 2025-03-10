@@ -1,5 +1,5 @@
 "use client";
-import GroupCollection from "@/components/GroupCollection";
+import GroupCollection from "../../../components/GroupCollection";
 import React, { useEffect, useState } from "react";
 // import { toast } from "react-hot-toast";
 
