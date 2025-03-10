@@ -17,6 +17,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import Quill from 'quill';
+import Draggable from "react-draggable";
 // import Draggable from 'react-draggable';
 // import { Progress } from "../ui/progress";
 interface Slide {
@@ -99,30 +100,6 @@ console.log(slides,"wertyuio");
 Font.whitelist = ['arial', 'times-new-roman', 'courier-new', 'georgia', 'verdana'];
 Quill.register(Font, true);
 
-
-  const modules = {
-    toolbar: [
-      [{ 'font': Font.whitelist }],
-      [{ 'header': [1, 2,3,4,5, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['link', 'image'],
-      ['clean']
-    ],
-  };
-
-    const formats = [
-      'font',
-      'header',
-      'bold', 'italic', 'underline', 'strike',
-      'color', 'background',
-      'list', 'bullet',
-      'align',
-      'link', 'image',
-      'clean'
-    ];
 
   useEffect(() => {
     const storedElements:any = localStorage.getItem("slideElements");
@@ -431,8 +408,10 @@ console.log(newMessage,"newMessage");
 
 
 <section className="main-slider-section">
+  
       {showModal && (
-        // <Draggable axis="both" handle=".drag-handle">
+        <Draggable 
+        axis="both" handle=".drag-handle">
           <div
             style={{
               position: 'fixed',
@@ -494,7 +473,7 @@ console.log(newMessage,"newMessage");
               </button>
             </div>
           </div>
-        // </Draggable>
+        </Draggable>
       )}
         <section className="section slider">
           {/* Radio Buttons */}
@@ -561,53 +540,6 @@ console.log(newMessage,"newMessage");
           </div>
         </div>
       </section>
-
-
-      {/* <div className="swiperSlider">
-        <Swiper
-          spaceBetween={30}
-          slidesPerView={3}
-          onSlideChange={({ activeIndex }) => setActiveSlideIndex(activeIndex)}
-        >
-          {images.map((image, index) => (
-            <SwiperSlide
-              key={index}
-              style={{
-                ...styles.swiperSlide,
-                ...(activeSlideIndex + 1 === index
-                  ? {
-                      transform: "scale(1.2288)",
-                      backgroundColor: "#000000",
-                      zIndex: 9,
-                      height: "400px"
-                    }
-                  : {}),
-              }}
-            >
-              <div style={styles.slideWrapper}>
-                <img
-                  src={image}
-                  alt={`slide-${index}`}
-                  style={{ width: "fit-content", height: "400px", background: "white" }}
-                />
-                {elements
-                  .filter((el) => el.slideIndex === index + 1)
-                  .map((el, i) => (
-                    <DraggableElement
-                      key={i}
-                      content={el.content}
-                      type={el.type}
-                      index={i}
-                      setElements={setElements}
-                      initialX={el.x || 0}
-                      initialY={el.y || 0}
-                    />
-                  ))}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div> */}
 
       <Modal
         isOpen={isOpen}
