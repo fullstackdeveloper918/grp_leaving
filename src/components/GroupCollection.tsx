@@ -5,7 +5,7 @@ import Link from "next/link";
 import GiftCardCollectionPot from "./GiftCardCollectionPot";
 import SidebarModal from "./SidebarModal";
 import { toast } from "react-toastify";
-import { capFirst } from "@/utils/validation";
+import { capFirst } from "../utils/validation";
 import nookies from "nookies";
 import SendGiftModal from "./common/SendGiftModal";
 import Cookies from "js-cookie";

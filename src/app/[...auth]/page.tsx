@@ -1,8 +1,8 @@
 
 import ForgotPassword from "../../components/ForgotPassword";
-import Login from "@/components/Login";
-import Register from "@/components/Register";
-import ResetPassword from "@/components/ResetPassword";
+import Login from "../../components/Login";
+import Register from "../../components/Register";
+import ResetPassword from "../../components/ResetPassword";
 import React from "react";
 
 const page = ({params,searchParams}:any) => {
