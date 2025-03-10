@@ -29,6 +29,7 @@ interface Slide {
   card_img:any
 }
 
+
 const Custom: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
