@@ -6,13 +6,13 @@ import SocalLogin from "../components/common/SocialLogin";
 import MicroSoftLogin from "../components/common/MicroSoftLogin";
 import { useRouter } from "next/navigation";
 import { capFirst } from "@/utils/validation";
-import api from "@/utils/api";
+import api from "../utils/api";
 import { setCookie } from "nookies";
 import { GooglePayWithCDN } from "./common/GooglePayWithCDN";
 import GooglePay from "./common/GooglePay"
 import GooglePayButton from "./common/GooglePayButton";
 import { toast, ToastContainer } from "react-toastify";
-import { useAccessToken } from "@/app/context/AccessTokenContext";
+import { useAccessToken } from "../app/context/AccessTokenContext";
 import Link from "next/link";
 import Cookies from "js-cookie";
 const { Row, Col, Button } = {
