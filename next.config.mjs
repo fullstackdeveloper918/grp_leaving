@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 // next.config.mjs
-
 export default {
   images: {
     remotePatterns: [
@@ -10,12 +9,5 @@ export default {
         pathname: '/**',
       },
     ],
-  },
-
-  webpack(config, { isServer }) {
-    if (!isServer) {
-      config.optimization.minimize = false;
-    }
-    return config;
   },
 };
