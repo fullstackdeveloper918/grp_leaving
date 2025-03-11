@@ -1,281 +1,546 @@
-"use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import upload_img from "../assets/images/upload_img.png";
-import upload_gif from "../assets/images/upload_gif.png";
-import EditorModal from "./common/EditorModal";
-import EditorCrousal from "./common/EditorCrousal";
-import { CopyOutlined } from "@ant-design/icons";
-import { Button, Input, Modal, QRCode, Space, Typography } from "antd";
-import { toast, ToastContainer } from "react-toastify";
-import DemoViewCard from "./common/DemoViewCard";
-import DemoBoard from "./common/DemoBoard";
-import userIcon from "../assets/icons/ab.png";
-import Image from "next/image";
-import Custom from "./common/custom";
-import Customcraousal from "./common/Customcraousal";
-// import { zIndex } from "html2canvas/dist/types/css/property-descriptors/z-index";
-import MySignatures from "./common/MySignatures";
-const { Paragraph, Text } = Typography;
-const DemoCard = ({ params }: any) => {
-  const [show, setShow] = useState<any>(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleModalClose = () => {
-    setIsModalVisible(false); // Close the modal
-  };
-  console.log(show, "show");
+import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useDrag } from "@use-gesture/react";
+import { useSpring, animated } from "@react-spring/web";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import "swiper/css";
+import "swiper/css/pagination";
+import Modal from "react-modal";
+import axios from "axios";
+import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
+import Quill from 'quill';
+import Draggable from 'react-draggable';
 
-  const handleShare = () => {
-    setIsModalVisible(true);
-  };
-  const shareableLink =
-    "https://group-leaving-1lpt.vercel.app/demo/fwzDVjvbQ_X";
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shareableLink);
-    toast.success("Copied to clipboard", { autoClose: 2000 });
-  };
-  const addCard = () => {
-    setShow(true);
-  };
-
-  const showCard = () => {
-    setShow(false);
-  };
-
-  const contributors = [
-    { name: "Harry", amount: 100 },
-    { name: "Hermione", amount: 50 },
-    { name: "Anonymous", amount: 20 },
-    { name: "Neville", amount: 80 },
-    { name: "Draco", amount: 2 },
-    { name: "Severus", amount: 8 },
-    { name: "Minerva", amount: 100 },
-  ];
-
-  const totalAmount = contributors.reduce((sum, c) => sum + c.amount, 0);
+const Custom: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [gifs, setGifs] = useState<string[]>([]);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<any>(null);
   const [elements, setElements] = useState<any[]>([]);
+  const [editorContent, setEditorContent] = useState("");
+  const [images, setImages] = useState<string[]>([
+    "https://groupleavingcards.com/assets/design/617318f94c962c605abdeabb.jpg",
+    "https://groupleavingcards.com/assets/design/66bd382d51e4bce9bdd31fc6_sm.avif",
+    "https://groupleavingcards.com/assets/design/66e30136ffa5cb04d55d990e_sm.avif",
+    "https://groupleavingcards.com/assets/design/6734d2bbe8c991dba26a0288_sm.webp",
+    "https://groupleavingcards.com/assets/design/66967675b0d2b479aa568c98_sm.avif",
+    "https://groupleavingcards.com/assets/design/66d88499b4fb75024aa2d8de_sm.avif",
+  ]);
 
-  // Step 1: Retrieve from localStorage on component mount
+
+
+
+ 
+
   useEffect(() => {
     const storedElements = localStorage.getItem("slideElements");
-
     if (storedElements) {
       setElements(JSON.parse(storedElements));
     }
   }, []);
-  
-    // useEffect(() => {
-    //   if (elements.length > 0) {
-    //     localStorage.setItem("slideElements", JSON.stringify(elements));
-    //   }
-    // }, [elements]);
-    console.log(elements,"sdasdqweqw");
-    
+
+  useEffect(() => {
+    if (elements.length > 0) {
+      localStorage.setItem("slideElements", JSON.stringify(elements));
+    }
+  }, [elements]);
+
+  const handleAddMessageClick = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => setIsOpen(false);
+
+  const handleSaveMessage = () => {
+    if (activeSlideIndex === null) {
+      alert("No active slide selected!");
+      return;
+    }
+
+    const newMessage = {
+      type: "text",
+      content: editorContent || "Default message",
+      slideIndex: activeSlideIndex + 2,
+      x: 0,
+      y: 0,
+    };
+
+    setElements([...elements, newMessage]);
+    setShowModal(false);
+    setEditorContent("");
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (activeSlideIndex !== null) {
+          const newImage = {
+            type: "image",
+            content: reader.result as string,
+            slideIndex: activeSlideIndex + 2,
+            x: 0,
+            y: 0,
+          };
+
+          setElements([...elements, newImage]);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const fetchGifs = async (term: string) => {
+    try {
+      const response = await axios.get(
+        "https://tenor.googleapis.com/v2/search",
+        {
+          params: {
+            q: term || "wave",
+            key: "AIzaSyBphMbpVXm8Rc9CnWX7W3LuePqIHgSWoDo",
+            client_key: "my_test_app",
+            limit: 100,
+            locale: "en_US",
+          },
+        }
+      );
+
+      setGifs(
+        response.data.results.map((result: any) => result.media_formats.gif.url)
+      );
+    } catch (error) {
+      console.error("Error fetching GIFs:", error);
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchTerm) fetchGifs(searchTerm);
+  };
+
+  const openModal = () => {
+    setIsOpen(true);
+    fetchGifs("trending");
+  };
+
+  const handleAddPage = () => {
+    setImages([
+      ...images,
+      "https://example.com/new-page-image.jpg",
+    ]);
+  };
+
+  const fetchImageAsBase64 = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl, { mode: "cors" });
+      const blob = await response.blob();
+
+      if (blob.type === "image/avif") {
+        const imageBitmap = await createImageBitmap(blob);
+        const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(imageBitmap, 0, 0);
+        return canvas.convertToBlob({ type: "image/png" }).then((pngBlob) => {
+          return new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(pngBlob);
+          });
+        });
+      }
+
+      return new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return null;
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    const pdf = new jsPDF("p", "mm", "a4");
+    const slideWidth = 210;
+    const slideHeight = 297;
+
+    for (let i = 0; i < images.length; i++) {
+      const base64Image = await fetchImageAsBase64(images[i]);
+
+      if (!base64Image) continue;
+
+      if (i !== 0) pdf.addPage();
+
+      pdf.addImage(base64Image, "JPEG", 10, 10, slideWidth - 20, slideHeight / 2);
+
+      elements.forEach((el) => {
+        if (el.slideIndex === i + 1) {
+          if (el.type === "text") {
+            pdf.setFontSize(14);
+            pdf.setTextColor(0, 0, 255);
+            pdf.text(el.content, 10 + el.x, slideHeight / 2 + 20 + el.y);
+          } else if (el.type === "image" || el.type === "gif") {
+            pdf.addImage(
+              el.content,
+              "JPEG",
+              10 + el.x,
+              slideHeight / 2 + 20 + el.y,
+              50,
+              50
+            );
+          }
+        }
+      });
+
+      elements.forEach((el) => {
+        if (el.slideIndex === i + 1) {
+          pdf.setFontSize(10);
+          pdf.setTextColor(255, 0, 0);
+          pdf.text(
+            `(${el.x}, ${el.y})`,
+            10 + el.x,
+            slideHeight / 2 + 40 + el.y
+          );
+        }
+      });
+    }
+
+    pdf.save("slides_with_positions.pdf");
+  };
+
   return (
-    <>
-      {params === "fwzDVjvbQ_X" ? (
-        <>
-          <section className="bg-demo_banner text-center demo_section common_padding bg-cover bg-no-repeat">
-            <ToastContainer/>
-            <div className="container-fluid">
-              <h1 className="text-md tracking-tight demo_heading">
-                This is our demo card
-              </h1>
-              <p className="demo_paragraph text-grey ">
-                You can test it out by adding messages, images and GIFs to see
-                how it works. When you create a real card you will see more
-                options to manage and customise your card.
-              </p>
-              <p>
-                <b>Like what you see?</b> Create your own card to start
-                collecting unlimited messages and pages all at a fixed cost.
-              </p>
-              <div className="demo_button_wrapper">
-                <Link href={`/create`}>
-                  <button className=" btnPrimary">Create a Card</button>
-                </Link>
-                {/* 0cVkV16gHzX */}
-                <Link href={`/demo/0cVkV16gHzX`}>
-                  <button className="btnSecondary ml-3">View Demo Board</button>
-                </Link>
-              </div>
-            </div>
-          </section>
-          <section className="greeting_card_sign common_padding">
-            <div className="container-fluid">
-              <div className=" md:flex block">
-                <div className="md:w-1/2  w-full">
-                  <div
-                    className="flex space-x-2 mb-2 "
-                    style={{ paddingLeft: "110px" }}
-                  >
-                    {/* {show ? (
-                      <button
-                        className="btnPrimary py-2 px-3"
-                        onClick={showCard}
-                      >
-                        Show Card
-                      </button>
-                    ) : (
-                      <button
-                        className="btnPrimary py-2 px-3"
-                        onClick={addCard}
-                      >
-                        Add Card
-                      </button>
-                    )} */}
-                    {/* <button className="bg-lightBg rounded-md p-2"><img src={upload_img.src} alt="upload img" className="upload_img" /></button>
-                <button className="bg-lightBg rounded-md p-2"><img src={upload_gif.src} alt="upload img" className="upload_img" /></button> */}
-                  </div>
-
-                  {/* {show ? <EditorModal showCard={showCard}/> : <EditorCrousal />} */}
-                  {/* {show ? <EditorModal/> : <Customcraousal />} */}
-                  {/* {show ? <EditorModal /> : <Custom />} */}
-                  {/* <Carousel /> */}
-                  {/* <EditorModal/> */}
-                </div>
-                <div className="md:w-1/2 w-full md:mt-0 mt-5  flex items-center justify-start flex-col">
-                <MySignatures/>
-                  <div className="bg-white shadow-lg rounded-lg p-10 w-full max-w-lg flex flex-col gap-2 items-center">
-                    <h3 className="text-center text-md font-normal ">
-                      Gift Card Collection Pot
-                    </h3>
-                    <button
-                      className="text-center text-md font-normal relative"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      <span className="absolute bottom-3 bg-[#061178] text-white rounded-full px-2 text-center">{contributors.length}</span>
-                      <span className="">
-                        <Image src={userIcon} alt="user" />
-                      </span>
-                    </button>
-                    <img
-                      src="https://gift.wegift.io/static/product_assets/AMZ-GB/AMZ-GB-card.png"
-                      alt="Amazon"
-                      className="voucher_img mx-auto rounded"
-                    />
-                    <h4 className="font-bold text-center ">£360</h4>
-                    <button className="bg-greyBorder text-blackText rounded-lg  w-100 text-sm p-2.5">
-                      Contribute to Hagrid Gift Card
-                    </button>
-                  </div>
-                  <div className="w-full" style={{ width: "73%" }}>
-                    <button
-                      className=" btnPrimary text-center w-100 mt-3 rounded-md"
-                      onClick={handleShare}
-                    >
-                      Share Card
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <Modal
-              visible={isModalVisible}
-              onCancel={handleModalClose}
-              footer={null}
-              width={600} // Adjust as needed
-              centered
-              bodyStyle={{ padding: "24px" }}
+    <div style={styles.container}>
+      <div className="editor_option" style={{marginBottom:"15px"}} >
+        <div>
+          <button
+            className="add_btn"
+            onClick={handleAddMessageClick}
+            style={{
+              padding: "10px",
+              borderRadius: "50px",
+            }}
+          >
+            Add Message
+          </button>
+        </div>
+        <div className="search_input">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
+          <div className="upload_svg">
+            <svg
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mus-vubbuv"
+              focusable="false"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              data-testid="AddPhotoAlternateIcon"
             >
-              {/* Title */}
-              <Typography.Title level={3}>Share Card</Typography.Title>
-
-              {/* Instructions */}
-              <Paragraph>
-                Share this URL with everyone who you want to be able to add a
-                message. They will be able to add a message to the card without
-                having to sign up for an account. You can also share the QR code
-                if that is easier.
-              </Paragraph>
-
-              {/* Shareable Link */}
-              <Space
-                direction="vertical"
-                style={{ width: "100%", marginBottom: "16px" }}
-              >
-                <Text strong>Shareable link</Text>
-                <Input
-                  value={shareableLink}
-                  readOnly
-                  addonAfter={
-                    <Button
-                      type="text"
-                      icon={<CopyOutlined />}
-                      onClick={handleCopy}
-                    />
-                  }
-                />
-              </Space>
-
-              {/* QR Code */}
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <QRCode value={shareableLink} size={160} />
-              </Space>
-            </Modal>
-          </section>
-        </>
-      ) : (
-        <DemoBoard />
-      )}
-
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-          style={{ zIndex: 2 }}
-        >
-          <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-            {/* Close Button */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 focus:outline-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              Contributors
-            </h2>
-            <ul>
-              {contributors.map((contributor, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center border-b py-2"
-                >
-                  <span>{contributor.name}</span>
-                  <span>£{contributor.amount.toFixed(2)}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="flex justify-between items-center mt-4 font-bold text-gray-800">
-              <span>Total:</span>
-              <span>£{totalAmount.toFixed(2)}</span>
-            </div>
-            {/* <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Close
-            </button> */}
+              <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8zM5 19l3-4 2 3 3-4 4 5z"></path>
+            </svg>
           </div>
         </div>
+        <div className="search_input" onClick={openModal}>
+          <div className="upload_svg">
+            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mus-vubbuv" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="GifIcon">
+              <path d="M11.5 9H13v6h-1.5zM9 9H6c-.6 0-1 .5-1 1v4c0 .5.4 1 1 1h3c.6 0 1-.5 1-1v-2H8.5v1.5h-2v-3H10V10c0-.5-.4-1-1-1m10 1.5V9h-4.5v6H16v-2h2v-1.5h-2v-1z"></path>
+            </svg>
+          </div>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <button
+            onClick={handleAddPage}
+            className="px-4 py-2 add_btn border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition"
+            style={{color:"white", marginLeft:"40px", borderRadius: "70px"}}
+          >
+            +
+          </button>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <button
+            onClick={handleDownloadPDF}
+            className="px-4 py-2 add_btn border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition"
+            style={{color:"white", marginLeft:"20px", borderRadius: "70px"}}
+          >
+            Download
+          </button>
+        </div>
+      </div>
+
+      {showModal && (
+        <Draggable axis="both" handle=".drag-handle">
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000,
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              minWidth: '300px',
+              maxWidth: '500px',
+              minHeight: '200px',
+              maxHeight: '600px',
+              overflow: 'auto',
+              resize: 'horizontal'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="drag-handle" style={{ cursor: 'move', marginBottom: '10px', textAlign: 'center', fontWeight: 'bold' }}>
+              Drag Me
+            </div>
+            <ReactQuill
+              theme="snow"
+              value={editorContent}
+              onChange={setEditorContent}
+              style={{ height: '200px', marginBottom: '20px', paddingBottom:'30px' }}
+            />
+
+            <div className="flex gap-4 items-center justify-center">
+              <button
+                onClick={() => setShowModal(false)}
+                style={{ padding: '10px 20px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveMessage}
+                style={{ padding: '10px 20px', backgroundColor: '#007BFF', color: '#fff', borderRadius: '4px' }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </Draggable>
       )}
-    </>
+
+
+      <div className="swiperSlider">
+        <Swiper
+          spaceBetween={30}
+          slidesPerView={3}
+          onSlideChange={({ activeIndex }) => setActiveSlideIndex(activeIndex)}
+        >
+          {images.map((image, index) => (
+            <SwiperSlide
+              key={index}
+              style={{
+                ...styles.swiperSlide,
+                ...(activeSlideIndex + 1 === index
+                  ? {
+                      transform: "scale(1.2288)",
+                      backgroundColor: "#000000",
+                      zIndex: 9,
+                      height: "400px"
+                    }
+                  : {}),
+              }}
+            >
+              <div style={styles.slideWrapper}>
+                <img
+                  src={image}
+                  alt={`slide-${index}`}
+                  style={{ width: "fit-content", height: "400px", background: "white" }}
+                />
+                {elements
+                  .filter((el) => el.slideIndex === index + 1)
+                  .map((el, i) => (
+                    <DraggableElement
+                      key={i}
+                      content={el.content}
+                      type={el.type}
+                      index={i}
+                      setElements={setElements}
+                      initialX={el.x || 0}
+                      initialY={el.y || 0}
+                    />
+                  ))}
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        className="p-4 bg-white rounded-lg shadow-lg max-w-xl mx-auto"
+      >
+        <h2 className="text-lg font-bold mb-4">Select a GIF</h2>
+        <form onSubmit={handleSearch} className="mb-4 flex gap-2">
+          <input
+            type="text"
+            placeholder="Search GIFs"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-grow px-4 py-2 border rounded-md"
+          />
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-black border rounded-md hover:bg-blue-700 transition"
+          >       
+            Search
+          </button>
+        </form>
+        <div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-96">
+          {gifs.map((gifUrl, index) => (
+            <img
+              key={index}
+              src={gifUrl}
+              alt="GIF"
+              style={{ width: "80%", height: "80%" }}
+              className="rounded-lg cursor-pointer"
+              onClick={() => {
+                setElements((prev) => [
+                  ...prev,
+                  { type: "gif", content: gifUrl, slideIndex: activeSlideIndex + 2, x: 0, y: 0 },
+                ]);
+                closeModal();
+              }}
+            />
+          ))}
+        </div>
+        <button
+          onClick={closeModal}
+          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+        >
+          Close
+        </button>
+      </Modal>
+    </div>
   );
 };
 
-export default DemoCard;
+const DraggableElement = ({
+  content,
+  type,
+  index,
+  setElements,
+  initialX,
+  initialY,
+}: {
+  content: string;
+  type: string;
+  index: number;
+  setElements: React.Dispatch<React.SetStateAction<any[]>>;
+  initialX: number;
+  initialY: number;
+}) => {
+  const [{ x, y }, api] = useSpring(() => ({ x: initialX, y: initialY }));
+
+  const bind = useDrag((state: any) => {
+    const [newX, newY] = state.offset;
+
+    api.start({ x: newX, y: newY });
+
+    setElements((prevElements) => {
+      const updatedElements = [...prevElements];
+      updatedElements[index] = {
+        ...updatedElements[index],
+        x: newX,
+        y: newY,
+      };
+      localStorage.setItem("slideElements", JSON.stringify(updatedElements));
+      return updatedElements;
+    });
+  });
+
+  return (
+    <animated.div
+      {...bind()}
+      style={{
+        x,
+        y,
+        position: "absolute",
+        cursor: "move",
+        zIndex: 10,
+        color: "rgb(17, 17, 17)",
+        left: "0px",
+        right: "0px",
+        top: "50%",
+        transform: "translate3d(0px, 12px, 0px)",
+      }}
+    >
+      {type === "image" || type === "gif" ? (
+        <img
+          src={content}
+          alt="uploaded"
+          style={{ width: "100px", height: "100px" }}
+        />
+      ) : (
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+      )}
+    </animated.div>
+  );
+};
+
+const styles = {
+  container: {
+    padding: "20px",
+    fontFamily: "Helvetica, Arial, sans-serif",
+    backgroundColor: "#eee",
+    minHeight: "100vh",
+    gap: "10px"
+  } as React.CSSProperties,
+  button: {
+    margin: "10px",
+    padding: "10px 15px",
+    fontSize: "14px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  } as React.CSSProperties,
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
+    zIndex: 999,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  } as React.CSSProperties,
+  modal: {
+    background: "#fff",
+    padding: "20px",
+    border: "1px solid #ccc",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    zIndex: 1000,
+    display: "flex",
+    flexDirection: "column",
+    width: "80%",
+    maxWidth: "600px",
+  } as React.CSSProperties,
+  swiperSlide: {
+    textAlign: "center",
+    fontSize: "18px",
+    background: "#fff",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    height: "600px",
+    overflow: "hidden",
+  } as React.CSSProperties,
+  slideWrapper: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+  } as React.CSSProperties,
+};
+
+export default Custom;
