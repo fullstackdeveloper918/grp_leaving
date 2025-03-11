@@ -97,10 +97,6 @@ const [slides, setSlides] = useState<Slide[]>([
 ]);
 console.log(slides,"wertyuio");
 
-  const Font:any = Quill.import('formats/font');
-Font.whitelist = ['arial', 'times-new-roman', 'courier-new', 'georgia', 'verdana'];
-Quill.register(Font, true);
-
 
   useEffect(() => {
     const storedElements:any = localStorage.getItem("slideElements");
