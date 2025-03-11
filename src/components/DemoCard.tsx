@@ -132,7 +132,7 @@ const DemoCard = ({ params }: any) => {
 
                   {/* {show ? <EditorModal showCard={showCard}/> : <EditorCrousal />} */}
                   {/* {show ? <EditorModal/> : <Customcraousal />} */}
-                  {show ? <EditorModal /> : <Custom />}
+                  {/* {show ? <EditorModal /> : <Custom />} */}
                   {/* <Carousel /> */}
                   {/* <EditorModal/> */}
                 </div>
