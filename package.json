@@ -28,6 +28,7 @@
     "antd": "^5.20.3",
     "autoprefixer": "^10.4.21",
     "axios": "^1.7.9",
+    "canvas": "^2.11.2",
     "browser-image-resizer": "^2.4.1",
     "jquery": "^3.7.1",
     "jspdf": "^2.5.2",
@@ -85,6 +86,6 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   }
 }
