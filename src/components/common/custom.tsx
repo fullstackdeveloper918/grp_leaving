@@ -38,6 +38,30 @@ const Custom: React.FC = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState<any>(0);
 
   const [elements, setElements] = useState<any[]>([]);
+  // console.log(elements,"elements");
+  const sendEditorData=async()=>{
+    console.log(elements,"elementsasadsasasdas");
+    
+    let item={
+      editor_messages:elements,
+      user_uuid:""
+    } as any
+  try {
+    const response = await fetch("https://magshopify.goaideme.com/card/add-editor-messages", {
+      method: "POST",
+      body: JSON.stringify(item),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Failed to upload image");
+    }
+  
+    const data = await response.json();
+    console.log("Image uploaded successfully:", data);
+  } catch (error) {
+    
+  }
+  }
   const [editorContent, setEditorContent] = useState("");
   const [images, setImages] = useState<string[]>([
     "https://groupleavingcards.com/assets/design/617318f94c962c605abdeabb.jpg",
@@ -139,28 +163,89 @@ console.log(newMessage,"newMessage");
     setShowModal(false);
     setEditorContent("");
   };
+ 
+  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       if (activeSlideIndex !== null) {
+  //         const newImage = {
+  //           type: "image",
+  //           content: reader.result as string,
+  //           slideIndex: activeSlideIndex + 1,
+  //           x: 0,
+  //           y: 0,
+  //         };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //         setElements([...elements, newImage]);
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (activeSlideIndex !== null) {
-          const newImage = {
-            type: "image",
-            content: reader.result as string,
-            slideIndex: activeSlideIndex + 1,
-            x: 0,
-            y: 0,
+    console.log(file, "file");
+    
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
+  
+    try {
+      // Prepare the form data to send the file as a payload
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      // Make the POST request with the form data (multipart/form-data)
+      const response = await fetch("https://magshopify.goaideme.com/card/update-editor-messages", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+  
+      const data = await response.json();
+      console.log("Image uploaded successfully:", data);
+  
+      // Assuming the API responds with an object that includes the URL
+      if (data) {
+        const imageUrl = data.file;  // URL of the uploaded image
+  
+        if (file) {
+          const reader = new FileReader();
+  
+          reader.onloadend = () => {
+            if (activeSlideIndex !== null) {
+              // Creating the object to store the image data
+              const newImage = {
+                type: "image",
+                content: `https://magshopify.goaideme.com/${imageUrl}`,  // Use the URL from the API response
+                slideIndex: activeSlideIndex + 1,  // Slide index for reference
+                x: 0,  // Starting X position (can be updated as needed)
+                y: 0,  // Starting Y position (can be updated as needed)
+                user_id: "",
+              };
+  
+              // Add the new image object to the state
+              console.log(newImage, "newImage");
+              setElements((prevElements) => [...prevElements, newImage]);
+            }
           };
-
-          setElements([...elements, newImage]);
+          reader.readAsDataURL(file); // Converts image to base64 (if necessary for display)
         }
-      };
-      reader.readAsDataURL(file);
+      } else {
+        console.error("Invalid response: missing URL");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
   };
-
+  
+  
   const fetchGifs = async (term: string) => {
     try {
       const response = await axios.get(
@@ -344,6 +429,8 @@ console.log(newMessage,"newMessage");
 
   console.log(activeSlide,activeSlideIndex, "progress");
   return (
+    <>
+   
     <div style={styles.container}>
       <div className="editor_option" style={{marginBottom:"15px"}} >
         <div>
@@ -391,6 +478,12 @@ console.log(newMessage,"newMessage");
           >
             +
           </button>
+        </div>
+        <div style={{ textAlign: "center" }}>
+        <button  style={{
+              padding: "10px",
+              borderRadius: "50px",
+            }}  className="add_btn" onClick={sendEditorData}> click</button>
         </div>
         {/* <div style={{ textAlign: "center" }}>
           <button
@@ -584,6 +677,7 @@ console.log(newMessage,"newMessage");
         </button>
       </Modal>
     </div>
+    </>
   );
 };
 
