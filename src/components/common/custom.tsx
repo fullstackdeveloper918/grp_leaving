@@ -14,6 +14,7 @@ import SlideImg_4 from "../../assets/images/slide4.png"
 import SlideImg_5 from "../../assets/images/slide5.png"
 import Modal from "react-modal";
 import axios from "axios";
+import nookies from "nookies";
 import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import Quill from 'quill';
@@ -28,40 +29,59 @@ interface Slide {
   link: string;
   card_img:any
 }
-
+interface UserInfo {
+  name: string;
+  email: string;
+  uuid?: string;
+}
 
 const Custom: React.FC = () => {
+   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [gifs, setGifs] = useState<string[]>([]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<any>(0);
+  useEffect(() => {
+    const cookies = nookies.get();
+    console.log("cookiesUserInfo",cookies.userInfo);
+    const userInfoFromCookie: UserInfo | null = cookies.userInfo
+      ? JSON.parse(cookies.userInfo)
+      : null;
+    setUserInfo(userInfoFromCookie);
+  }, []);
+console.log(userInfo?.uuid,"userInf");
 
   const [elements, setElements] = useState<any[]>([]);
   // console.log(elements,"elements");
-  const sendEditorData=async()=>{
-    console.log(elements,"elementsasadsasasdas");
-    
-    let item={
-      editor_messages:elements,
-      user_uuid:""
-    } as any
-  try {
-    const response = await fetch("https://magshopify.goaideme.com/card/add-editor-messages", {
-      method: "POST",
-      body: JSON.stringify(item),
-    });
+  const sendEditorData = async () => {
+    console.log(elements, "elementsasadsasasdas");
   
-    if (!response.ok) {
-      throw new Error("Failed to upload image");
+    let item = {
+      editor_messages: elements,
+      user_uuid: userInfo?.uuid,
+    };
+  
+    try {
+      const response = await fetch("https://magshopify.goaideme.com/card/add-editor-messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Add this header to specify JSON
+        },
+        body: JSON.stringify(item), // Convert the item object to JSON string
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to upload data");
+      }
+  
+      const data = await response.json();
+      console.log("Data uploaded successfully:", data);
+    } catch (error) {
+      console.error("Error uploading data:", error);
     }
+  };
   
-    const data = await response.json();
-    console.log("Image uploaded successfully:", data);
-  } catch (error) {
-    
-  }
-  }
   const [editorContent, setEditorContent] = useState("");
   const [images, setImages] = useState<string[]>([
     "https://groupleavingcards.com/assets/design/617318f94c962c605abdeabb.jpg",
@@ -155,6 +175,7 @@ console.log(slides,"wertyuio");
       slideIndex: activeSlideIndex + 1,
       x: 0,
       y: 0,
+      user_uuid:userInfo?.uuid
     };
 console.log(activeSlideIndex,"activeSlideIndex");
 console.log(newMessage,"newMessage");
@@ -197,6 +218,7 @@ console.log(newMessage,"newMessage");
       // Prepare the form data to send the file as a payload
       const formData = new FormData();
       formData.append("file", file);
+      // formData.append("user_uuid", user_uuid:userInfo?.uuid);
   
       // Make the POST request with the form data (multipart/form-data)
       const response = await fetch("https://magshopify.goaideme.com/card/update-editor-messages", {
@@ -227,7 +249,7 @@ console.log(newMessage,"newMessage");
                 slideIndex: activeSlideIndex + 1,  // Slide index for reference
                 x: 0,  // Starting X position (can be updated as needed)
                 y: 0,  // Starting Y position (can be updated as needed)
-                user_id: "",
+                user_uuid:userInfo?.uuid
               };
   
               // Add the new image object to the state
@@ -618,6 +640,8 @@ console.log(newMessage,"newMessage");
                       setElements={setElements}
                       initialX={el.x || 0}
                       initialY={el.y || 0}
+                      // userId={}
+                      isDraggable={true} // Disable dragging
                     />
                   ))}
           </div>
@@ -662,7 +686,7 @@ console.log(newMessage,"newMessage");
               onClick={() => {
                 setElements((prev) => [
                   ...prev,
-                  { type: "gif", content: gifUrl, slideIndex: activeSlideIndex + 1, x: 0, y: 0 },
+                  { type: "gif", content: gifUrl, slideIndex: activeSlideIndex + 1, x: 0, y: 0,user_uuid:userInfo?.uuid },
                 ]);
                 closeModal();
               }}
@@ -688,6 +712,7 @@ const DraggableElement = ({
   setElements,
   initialX,
   initialY,
+  isDraggable = true, // Add a prop to control if dragging is enabled
 }: {
   content: string;
   type: string;
@@ -695,13 +720,31 @@ const DraggableElement = ({
   setElements: React.Dispatch<React.SetStateAction<any[]>>;
   initialX: number;
   initialY: number;
+  isDraggable?: boolean; // Optional prop to disable dragging
 }) => {
   const [{ x, y }, api] = useSpring(() => ({ x: initialX, y: initialY }));
+  const [userInfo1, setUserInfo1] = useState<any>(null);
 
+  useEffect(() => {
+    const cookies = nookies.get();
+    console.log("cookiesUserInfo", cookies.userInfo);
+    const userInfoFromCookie: UserInfo | null = cookies.userInfo
+      ? JSON.parse(cookies.userInfo)
+      : null;
+    setUserInfo1(userInfoFromCookie);
+  }, []);
+
+  // Log when userInfo1 changes
+  useEffect(() => {
+    console.log(userInfo1, "userInfo1 updated");
+  }, [userInfo1]);
   const bind = useDrag((state: any) => {
+
+    if (!isDraggable) return; // If drag is disabled, do nothing
     const [newX, newY] = state.offset;
 
     api.start({ x: newX, y: newY });
+console.log(userInfo1,"piopoi");
 
     setElements((prevElements) => {
       const updatedElements = [...prevElements];
@@ -709,11 +752,14 @@ const DraggableElement = ({
         ...updatedElements[index],
         x: newX,
         y: newY,
+        user_uuid:userInfo1?.uuid,
       };
       localStorage.setItem("slideElements", JSON.stringify(updatedElements));
       return updatedElements;
     });
-  });
+  },
+    { enabled: isDraggable }
+);
 
   return (
 <animated.div

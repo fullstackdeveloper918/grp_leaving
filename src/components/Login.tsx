@@ -91,7 +91,7 @@ const Login = () => {
       setLoading(true)
       const res=await api.Auth.login(items)
       console.log(res.data,"reerrer");
-      // Cookies.set("auth_token", res?.token, { sameSite: "None", secure: true });
+      Cookies.set("userInfo", JSON.stringify(res?.data));
       // Cookies.set("user_infos", res?.data);
       if(res?.data){
         toast.success("Login Successfully", {autoClose:1000})

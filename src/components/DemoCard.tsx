@@ -16,8 +16,12 @@ import Custom from "./common/custom";
 import Customcraousal from "./common/Customcraousal";
 // import { zIndex } from "html2canvas/dist/types/css/property-descriptors/z-index";
 import MySignatures from "./common/MySignatures";
+import EnvelopCard from "./common/EnvelopCard";
+import { useRouter } from "next/navigation";
 const { Paragraph, Text } = Typography;
 const DemoCard = ({ params }: any) => {
+
+  const router= useRouter()
   const [show, setShow] = useState<any>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,7 +76,9 @@ const DemoCard = ({ params }: any) => {
     //   }
     // }, [elements]);
     console.log(elements,"sdasdqweqw");
-    
+    const openEnvelop=()=>{
+      router.push("/envelop")
+    }
   return (
     <>
       {params === "fwzDVjvbQ_X" ? (
@@ -170,6 +176,8 @@ const DemoCard = ({ params }: any) => {
                     </button>
                   </div>
                 </div>
+                <button className="" onClick={openEnvelop}>click</button>
+                {/* <EnvelopCard/> */}
               </div>
             </div>
             <Modal

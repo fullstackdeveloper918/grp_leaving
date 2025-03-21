@@ -73,6 +73,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
+        
         <link
           rel="stylesheet"
           type="text/css"
@@ -123,6 +124,9 @@ export default function RootLayout({
           </MsalProvider>
         </AntdRegistry>
         </AccessTokenProvider>
+        {/* <!-- In public/index.html --> */}
+<script src="https://cdn.green-envelope.com/script.js"></script>
+
       </body>
     </html>
   );
