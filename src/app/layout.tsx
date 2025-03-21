@@ -125,7 +125,7 @@ export default function RootLayout({
         </AntdRegistry>
         </AccessTokenProvider>
         {/* <!-- In public/index.html --> */}
-<script src="https://cdn.green-envelope.com/script.js"></script>
+{/* <script src="https://cdn.green-envelope.com/script.js"></script> */}
 
       </body>
     </html>
