@@ -15,20 +15,48 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
   console.log(brandKey, "brandKey");
 
   const fetchGiftCard = async () => {
-    const response = await fetch(
-      `https://magshopify.goaideme.com/tango/single-tango-card/${brandKey}`, // Sending brandKey as query parameter
-      {
-        method: "GET", // No body for GET requests
-        headers: {
-          "Content-Type": "application/json", // Only for JSON responses
-        },
+    try {
+
+      const response1 = await fetch(
+        "https://magshopify.goaideme.com/order/create-token",
+        {
+          // replace '/api/cart' with the correct endpoint
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Authorization': `Bearer ${gettoken}`
+          },
+          body: "",
+        }
+      );
+
+      // Check if the request was successful
+      if (!response1.ok) {
+        throw new Error("Failed to add item to cart");
       }
-    );
 
-    const data = await response.json();
-    console.log(data, "lsjdflj");
+      const data1 = await response1.json();
 
-    setGiftCard(data);
+
+      const response = await fetch(
+        ` https://magshopify.goaideme.com/order/get-single-product?product_id=${brandKey}`, // Sending brandKey as query parameter
+        {
+          method: "GET", // No body for GET requests
+          headers: {
+            "Content-Type": "application/json", // Only for JSON responses
+              'Authorization': `Bearer ${data1?.data?.access_token}`
+          },
+        }
+      );
+  
+      const data = await response.json();
+      console.log(data, "lsjdflj");
+  
+      setGiftCard(data);
+      
+    } catch (error) {
+      
+    }
     // return data;
   };
 
@@ -41,7 +69,7 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
   const serviceFee = 1.3;
   const totalAmount = isCustomAmount
     ? parseFloat(customAmount) + serviceFee
-    : selectedAmount + serviceFee;
+    : selectedAmount + serviceFee+giftCard.data?.senderFee;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -58,7 +86,8 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
     }
   };
   // Check if giftCard and giftCard.data are defined before accessing imageUrls
-  const selectGiftImage = giftCard.data?.imageUrls["278w-326ppi"];
+  const selectGiftImage = giftCard.data?.logoUrls[0];
+  // const selectGiftImage = giftCard.data?.imageUrls["278w-326ppi"];
   // const selectGiftImage = giftCard?.data?.imageUrls ? giftCard.data.imageUrls["278w-326ppi"] : null;
 
   console.log(selectGiftImage, "selectGiftImage");
@@ -83,7 +112,7 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
 </div> */}
       {/* <EscrowPayment /> */}
       <div className="text-center mb-4 justify-center">
-        <p className="text-2xl font-bold">£{"44"}</p>
+        <p className="text-2xl font-bold">{giftCard.data?.senderFee} INR</p>
         <button
           onClick={openModal}
           className="bg-blue-600 text-black  border-2 border-blue-700 px-4 py-2  rounded-md hover:bg-blue-700 transition"
@@ -217,6 +246,8 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
               </button> */}
               <EscrowPayment
                 closeModal={closeModal}
+                paymentAmount={totalAmount}
+                name={name}
                 brandKey={brandKey}
                 groupId={groupId}
               />

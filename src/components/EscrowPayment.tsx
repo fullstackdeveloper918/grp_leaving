@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const EscrowPayment = ({ closeModal, brandKey, groupId }: any) => {
+const EscrowPayment = ({ closeModal, brandKey, groupId,paymentAmount,name }: any) => {
   console.log(groupId, "groupId");
 
   const router = useRouter();
@@ -64,9 +64,9 @@ const EscrowPayment = ({ closeModal, brandKey, groupId }: any) => {
       // Configure Razorpay Checkout options
       const options = {
         key: "rzp_test_NPDqhJnbXJi072",
-        amount: AMOUNT * 100, // Razorpay requires the amount in paise
+        amount: paymentAmount * 100, // Razorpay requires the amount in paise
         currency: "INR",
-        name: "Testing Solutions",
+        name: name||"Anonymous",
         description: "Test Transaction with Escrow",
         order_id: data.orderId, // Use the order ID from the backend respo7nse
         handler: function (response: any) {

@@ -19,7 +19,61 @@ console.log(addCard,"addcard");
   const [uuid, setUuid] = useState<string | null>(null);
   console.log(uuid, "uuid");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
+
+const [state,setState]=useState<any>("")
+  // const openModal = () => setIsModalOpen(true);
+  const openModal = async()=>{
+    try {
+      setLoading(true)
+      const response = await fetch(
+        "https://magshopify.goaideme.com/order/create-token",
+        {
+          // replace '/api/cart' with the correct endpoint
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Authorization': `Bearer ${gettoken}`
+          },
+          body: "",
+        }
+      );
+
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error("Failed to add item to cart");
+      }
+
+      const data = await response.json(); // Assuming the response returns JSON
+      console.log(data,"sdfghjkl;");
+      const response1 = await fetch(
+        " https://magshopify.goaideme.com/order/get-products",
+        {
+          // replace '/api/cart' with the correct endpoint
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${data?.data?.access_token}`
+          },
+          body: "",
+        }
+      );
+
+      // Check if the request was successful
+      if (!response1.ok) {
+        throw new Error("Failed to add item to cart");
+      }
+
+      const data1 = await response1.json();
+      console.log(data1,"data1");
+      setState(data1)
+      setIsModalOpen(true);
+      // toast.success("Added Successfully", {autoClose:2000});
+    } catch (error) {
+      
+    }
+  }
+
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedImage(null);
@@ -50,6 +104,8 @@ console.log(addCard,"addcard");
   const [collectionTitle, setCollectionTitle] = useState("");
   const [loading, setLoading] = useState<any>(false);
 const [brandKeys,setBrandKeys]=useState("")
+console.log(brandKeys,"brandKeys");
+
 const [selectedImage, setSelectedImage] = useState<any | null>(null);
 const [addSelectedImage, setAddSelectedImage] = useState<any | null> (null);
 const gettoken = Cookies.get("auth_token"); 
@@ -96,6 +152,9 @@ const gettoken = Cookies.get("auth_token");
     //   collectionTitle,
     //   ...formData
     // };
+    console.log(brandKeys,"kfhaskhdfkashdfkhasdfh");
+    
+    // return
     let item = {
       user_uuid: uuid,
       collection_title: collectionTitle,
@@ -149,7 +208,7 @@ const gettoken = Cookies.get("auth_token");
   const handleImageClick = (imageData: any) => {
     setSelectedImage(imageData);
     console.log(imageData,"imageData");
-    setBrandKeys(imageData.brandKey)
+    setBrandKeys(imageData?.productId)
     setIsModalOpen(true); // Open modal when an image is clicked
   };
 
@@ -171,9 +230,10 @@ const gettoken = Cookies.get("auth_token");
   // const faceValues = selectedImage?.items.map((item:any) => item.faceValue);
   // console.log(faceValues,"faceValues");
   
-  const faceValues = selectedImage?.items
-  .map((item: any) => item.faceValue) // Extract faceValue
-  .filter((value: any) => value !== undefined && value !== null); // Filter out undefined or null values
+  const faceValues = selectedImage?.logoUrls[0]; // Filter out undefined or null values
+  // const faceValues = selectedImage?.items
+  // .map((item: any) => item.faceValue) // Extract faceValue
+  // .filter((value: any) => value !== undefined && value !== null); // Filter out undefined or null values
 
 let minFaceValue: number | undefined;
 let maxFaceValue: number | undefined;
@@ -191,7 +251,7 @@ if (faceValues?.length > 0) {
 console.log(faceValues, "faceValues");
 console.log(minFaceValue, "minFaceValue"); // This will now work because minFaceValue is declared above
 console.log(maxFaceValue, "maxFaceValue");
-const selectGiftImage = selectedImage?.imageUrls["278w-326ppi"];
+const selectGiftImage = selectedImage?.logoUrls[0]
   return (
     <div>
       <ToastContainer />
@@ -336,13 +396,15 @@ const selectGiftImage = selectedImage?.imageUrls["278w-326ppi"];
               {selectedImage.brandName}
             </div> */}
             <h2 className="text-xl font-bold ">{selectedImage.brandName}</h2>
-            <p className="text-sm text-gray-500">Currency: <span className="font-bold">INR</span></p>
             <p className="text-sm text-gray-500">Country: <span className="font-bold">IND</span></p>
-            <p className="text-sm text-gray-500">Min Value: <span className="font-bold">{minFaceValue}</span></p>
-            <p className="text-sm text-gray-500">Max Value:<span className="font-bold">{maxFaceValue}</span></p>
-            <p className="text-sm text-gray-500 text-center mt-2">
+            <p className="text-sm text-gray-500">Currency: <span className="font-bold">INR</span></p>
+            <p className="text-sm text-gray-500">Price: <span className="font-bold">{selectedImage?.senderFee}</span></p>
+
+            {/* <p className="text-sm text-gray-500">Min Value: <span className="font-bold">{minFaceValue}</span></p>
+            <p className="text-sm text-gray-500">Max Value:<span className="font-bold">{maxFaceValue}</span></p> */}
+            {/* <p className="text-sm text-gray-500 text-center mt-2">
               Contribution Fees: <span className="font-bold">{selectedImage.contributionFees}</span>
-            </p>
+            </p> */}
             <p className="text-xs text-gray-400 mt-1 text-center">
               (We automatically create multiple gift cards if you go over the max)
             </p>
@@ -360,8 +422,8 @@ const selectGiftImage = selectedImage?.imageUrls["278w-326ppi"];
           <div className="relative">
             {/* Image Grid */}
             <div className="grid grid-cols-2 gap-4 max-h-80 overflow-y-auto">
-              {data?.data.map((res: any, index: number) => {
-                const imageUrl = res.imageUrls["200w-326ppi"]; // You can change this key to any other size if needed
+              {state?.data?.content.map((res: any, index: number) => {
+                const imageUrl = res.logoUrls[0]; // You can change this key to any other size if needed
 
                 return (
                   <div
@@ -371,11 +433,11 @@ const selectGiftImage = selectedImage?.imageUrls["278w-326ppi"];
                   >
                     <img
                       src={imageUrl}
-                      alt={res.brandName} // Assuming there's a 'brandName' field in your data
+                      alt={res?.brand?.brandName} // Assuming there's a 'brandName' field in your data
                       className="w-full h-auto object-cover"
                     />
                     <p className="text-center p-2 font-medium">
-                      {res.brandName}
+                      {res?.brand?.brandName}
                     </p>
                   </div>
                 );
