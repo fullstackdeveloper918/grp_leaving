@@ -1,24 +1,42 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircleIcon, ClipboardIcon } from "@heroicons/react/24/solid";
+import { useSearchParams } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import Link from "next/link";
 
-const SuccessPage: React.FC = () => {
-  const [copySuccess, setCopySuccess] = useState<string>("");
+const SuccessPage = () => {
+  // const [copySuccess, setCopySuccess] = useState<string>("");
+const searchParams = useSearchParams(); // Access the search params
+console.log(searchParams,"searchParams");
 
+const [paymentId, setPaymentId] = useState<string | null>(null);
+console.log(paymentId,"paymentId");
+useEffect(() => {
+  // Extract the 'id' query parameter
+  const id = searchParams.get("unique_id"); // Get the 'id' parameter
+  console.log(id,"uououio");
+  
+  if (id) {
+    setPaymentId(id); // Set the value of the query parameter
+  }
+}, [searchParams])
   const handleCopy = () => {
-    navigator.clipboard.writeText("https://groupcavingcards.com/share/qYqQpxgX810")
+    navigator.clipboard.writeText(`http://localhost:3000/share/editor/${paymentId}`)
       .then(() => {
-        setCopySuccess("Link copied successfully!");
-        setTimeout(() => setCopySuccess(""), 2000); // Clear message after 2 seconds
+        toast.success("Link copied successfully")
+        // setCopySuccess("Link copied successfully!");
+        // setTimeout(() => setCopySuccess(""), 2000); // Clear message after 2 seconds
       })
       .catch(() => {
-        setCopySuccess("Failed to copy the link.");
-        setTimeout(() => setCopySuccess(""), 2000);
+        // setCopySuccess("Failed to copy the link.");
+        // setTimeout(() => setCopySuccess(""), 2000);
       });
   };
 
   return (
     <div className="success-container">
+      <ToastContainer/>
       <div className="success-card">
         {/* Steps */}
         <div className="steps-container">
@@ -54,20 +72,23 @@ const SuccessPage: React.FC = () => {
             <input
               type="text"
               readOnly
-              value="https://groupcavingcards.com/share/qYqQpxgX810"
+              value={`http://localhost:3000/share/editor/${paymentId}`}
+              // value={`https://groupcavingcards.com/share/${paymentId}`}
               className="shareable-input"
             />
             <button onClick={handleCopy} className="copy-button">
               <ClipboardIcon className="clipboard-icon" />
             </button>
           </div>
-          {copySuccess && <p className="copy-success-message">{copySuccess}</p>}
+          {/* {copySuccess && <p className="copy-success-message">{copySuccess}</p>} */}
         </div>
 
         {/* Buttons */}
         <div className="button-container">
           <button className="view-receipt-button">View Receipt</button>
+          <Link href={`/share/editor/${paymentId}`}>
           <button className="sign-card-button">Sign Card</button>
+          </Link>
         </div>
       </div>
     </div>

@@ -17,11 +17,24 @@ interface UserInfo {
 }
 
 const RazorPay = ({ amount, type }: any) => {
+  //  const getToken = cookies().get("auth_token")?.value || "";
+  //   console.log(getToken, "Access Token");
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const param = useParams();
   console.log(param,"param");
+  console.log(userInfo,"userInfo");
+  
+  const [state, setState] = useState<string>("");
+  const [authToken, setAuthToken] = useState<string>("");
+  console.log(authToken,"authToken");
 
+  useEffect(() => {
+    const cookies = nookies.get();
+    const token = cookies.auth_token || "";
+    setAuthToken(token);
+    console.log(token, "Access Token");
+  }, [state]);
   const searchParams = useSearchParams();
   console.log(type,"type");
   
@@ -37,13 +50,15 @@ const RazorPay = ({ amount, type }: any) => {
       : null;
     setUserInfo(userInfoFromCookie);
   }, []);
+const [uniqueId,setUniqueId] =useState<any>("")
+console.log(uniqueId,"uniqueId");
 
   const handlePayment = async () => {
     setIsProcessing(true);
     try {
       const response = await fetch("/api1/create", { method: "POST" });
       const data = await response.json();
-
+setState(data)
       if (!window.Razorpay) {
         console.error("Razorpay SDK not loaded");
         return;
@@ -63,12 +78,14 @@ const RazorPay = ({ amount, type }: any) => {
           const product_id = param.id;
 
           console.log("product_id",product_id)
-          
+          // headers["Authorization"] = `Bearer ${getToken}`;
           try {
             const paymentResponse = await fetch("https://magshopify.goaideme.com/razorpay/save-payment", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+               'Authorization': `Bearer ${authToken}`
+                // "Authorization":`Bearer ${authToken}`
               },
               body: JSON.stringify({
                 cart_uuid: cartId,
@@ -82,13 +99,15 @@ const RazorPay = ({ amount, type }: any) => {
             if (!paymentResponse.ok) {
               throw new Error("Payment save failed");
             }
-
-            // Redirect based on type after successful payment
+            const responseData = await paymentResponse.json();
+            console.log(responseData,"paymentResponse");
             if (type === "bundle") {
               router.push(`/account/bundles`);
-            } else {
-              router.push(`/payment/success`);
+            } else{
+              router.push(`/payment/success?${responseData?.data?.messages_unique_id}`);
             }
+            setUniqueId(responseData?.data?.messages_unique_id)
+            
           } catch (error) {
             console.error("Error saving payment:", error);
           }
@@ -109,6 +128,11 @@ const RazorPay = ({ amount, type }: any) => {
 
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
+      // if (type === "bundle") {
+      //   router.push(`/account/bundles`);
+      // } else{
+      //   router.push(`/payment/success?${uniqueId}`);
+      // }
     } catch (error) {
       console.error("Payment failed", error);
     } finally {

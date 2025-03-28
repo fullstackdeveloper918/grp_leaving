@@ -1,135 +1,189 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import HTMLFlipBook from "react-pageflip";
 
-const EnvelopCard = () => {
-  const [recipient, setRecipient] = useState('John Doe');
-  const [message, setMessage] = useState('You have a new greeting card!');
-  const [image, setImage] = useState('https://groupleavingcards.com/assets/design/66bd382d51e4bce9bdd31fc6_sm.avif');
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleEnvelope = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // Inline Styles
-  const envelopeContainerStyle = {
-    position: 'relative',
-    width: '300px',
-    height: '200px',
-    margin: '30px auto',
-    perspective: '1000px', // Creates the 3D effect
-  }as any;
-
-  const envelopeCardStyle = {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    transformStyle: 'preserve-3d',
-    transition: 'transform 1s ease-out', // Envelope flip transition
-    transform: isOpen ? 'rotateY(180deg)' : 'rotateY(0deg)', // Envelope flip
-  }as any;
-
-  const envelopeSideStyle = {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backfaceVisibility: 'hidden', // Hide the back when flipped
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }as any;
-
-  const envelopeFrontStyle = {
-    backgroundColor: '#f7f7f7',
-    border: '2px solid #ccc',
-    borderRadius: '10px',
-    boxSizing: 'border-box',
-  };
-
-  const envelopeBackStyle = {
-    backgroundColor: '#fff',
-    transform: 'rotateY(180deg)', // Start with the back side facing
-    padding: '20px',
-    boxSizing: 'border-box',
-  };
-
-  const cardContentStyle = {
-    color: 'white',
-    textAlign: 'center',
-    padding: '10px',
-    borderRadius: '10px',
-    backgroundImage: `url(${image})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    transform: isOpen ? 'translateY(0)' : 'translateY(50px)', // Card slide-up effect
-    opacity: isOpen ? '1' : '0',
-    transition: 'transform 1s ease-out, opacity 1s ease-out', // Slide and fade-in transition
-  }as any;
-
-  const h3Style = {
-    fontSize: '24px',
-    marginBottom: '10px',
-  };
-
-  const pStyle = {
-    fontSize: '16px',
-  };
-
+// PageCover Component
+const PageCover = React.forwardRef((props: any, ref: any) => {
   return (
-    <div style={{ textAlign: 'center', margin: '20px' }}>
-      <h2>Green Envelope Preview</h2>
-
-      {/* Form to customize preview */}
-      <div style={{ marginBottom: '20px' }}>
-        <label>Recipient:</label>
-        <input
-          type="text"
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-          style={{ margin: '0 10px', padding: '5px' }}
-        />
-      </div>
-      <div style={{ marginBottom: '20px' }}>
-        <label>Message:</label>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          style={{ margin: '0 10px', padding: '5px' }}
-        />
-      </div>
-      <div style={{ marginBottom: '20px' }}>
-        <label>Image URL:</label>
-        <input
-          type="text"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          style={{ margin: '0 10px', padding: '5px' }}
-        />
-      </div>
-
-      {/* Envelope and card container */}
-      <div style={envelopeContainerStyle} onClick={toggleEnvelope}>
-        <div style={envelopeCardStyle}>
-          {/* Envelope Front */}
-          <div style={{ ...envelopeSideStyle, ...envelopeFrontStyle }}>
-            <h3>Click to Open</h3>
-          </div>
-
-          {/* Envelope Back (Card Inside) */}
-          <div style={{ ...envelopeSideStyle, ...envelopeBackStyle }}>
-            <div style={cardContentStyle}>
-              <h3 style={h3Style}>{recipient}</h3>
-              <p style={pStyle}>{message}</p>
-            </div>
-          </div>
-        </div>
+    <div className="cover" ref={ref} data-density="hard">
+      <div>
+        <h2>{props.children}</h2>
       </div>
     </div>
+  );
+});
+PageCover.displayName = 'PageCover';
+// Page Component
+const Page = React.forwardRef((props: any, ref: any) => {
+  return (
+    <div className="page" ref={ref}>
+      <p>{props.children}</p>
+    </div>
+  );
+});
+Page.displayName = 'Page';
+const EnvelopCard = ({getdata}:any) => {
+  const { id } = useParams(); // Get the dynamic 'id' from URL
+  const [responseData, setResponseData] = useState<any>(null); // Store response data
+console.log(getdata,"getdata");
+console.log(responseData,"responseData");
+
+  // Fetch data when id changes
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `https://magshopify.goaideme.com/card/edit-messages-by-unique-id/${id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const data = await response.json();
+          setResponseData(data); // Store response data in state
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [id]);
+
+  // Handle the case when data is still being fetched
+  if (!responseData || !responseData?.data || !Array.isArray(responseData?.data[0]?.editor_messages)) {
+    return <div>Loading...</div>; // Show loading while data is being fetched
+  }
+
+  return (
+    <>
+    <style>
+        {`
+          .album-web {
+            background: rgb(255, 251, 251);
+            text-align: center;
+          }
+
+          .page {
+            box-shadow: 0 1.5em 3em -1em rgb(70, 69, 69);
+            position: relative;
+          }
+
+          .cover {
+            background-color: rgb(251, 225, 139);
+            box-shadow: 0 1.5em 3em -1em rgb(70, 69, 69);
+          }
+
+          .btn,
+          .form-control {
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            color: inherit;
+            appearance: none;
+            font-size: 1em;
+            line-height: 1.2;
+            padding: 0.5em var(--padding-x);
+            border-width: 2px;
+            border-style: solid;
+          }
+
+          .btn {
+            background-color: aquamarine;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            --padding-x: 1.2em;
+            border-color: transparent;
+          }
+
+          .form-control {
+            --padding-x: 0.5em;
+          }
+
+          input {
+            text-align: center;
+          }
+
+          .formContainer {
+            align-items: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        `}
+      </style>
+
+      <h2 className="editor_option mb-5">Preview</h2>
+      <div className="mt-5 mb-3">
+        <HTMLFlipBook
+          width={550}
+          height={650}
+          minWidth={315}
+          maxWidth={1000}
+          minHeight={420}
+          maxHeight={1350}
+          showCover={true}
+          flippingTime={1000}
+          style={{ margin: "0 auto" }}
+          maxShadowOpacity={0.5}
+          className="album-web"
+          startPage={0}
+          size="fixed"
+          drawShadow={true}
+          usePortrait={true}
+          startZIndex={1000}
+          autoSize={false}
+          mobileScrollSupport={true}
+          clickEventForward={false}
+          useMouseEvents={true}
+          swipeDistance={50}
+          showPageCorners={false}
+          disableFlipByClick={false}
+        >
+          <PageCover>
+            <img
+              src={"https://groupleavingcards.com/assets/design/617318f94c962c605abdeabb.jpg"}
+              alt="content"
+            />
+          </PageCover>
+
+          {/* Loop through the editor messages from responseData */}
+          {responseData?.data?.[0]?.editor_messages?.map((item: any, index: any) => (
+            <Page key={`${item.slideIndex}-${index}`} number={item.slideIndex}>
+              {item && (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: item.x,
+                    top: item.y,
+                  }}
+                >
+                  {item.type === "text" && (
+                    <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                  )}
+                  {item.type === "image" && <img src={item.content} alt="content" />}
+                  {item.type === "gif" && (
+                    <img src={item.content} alt="content" style={{ maxWidth: "50%", maxHeight: "40%" }} />
+                  )}
+                </div>
+              )}
+            </Page>
+          ))}
+
+          <PageCover>
+            <div className="mt-5">
+            Back Cover
+            </div>
+            </PageCover>
+        </HTMLFlipBook>
+      </div>
+    </>
   );
 };
 

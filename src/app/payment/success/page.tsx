@@ -1,5 +1,5 @@
-import SuccessPage from '@/components/common/SuccessPage'
 import React from 'react'
+import SuccessPage from '@/components/common/SuccessPage'
 
 const page = () => {
   return (

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect,useCallback } from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
 import { useDrag } from "@use-gesture/react";
@@ -19,6 +20,7 @@ import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import Quill from 'quill';
 import Draggable from "react-draggable";
+import { useParams, useRouter } from "next/navigation";
 // import Draggable from 'react-draggable';
 // import { Progress } from "../ui/progress";
 interface Slide {
@@ -36,6 +38,19 @@ interface UserInfo {
 }
 
 const Custom: React.FC = () => {
+  const router =useRouter()
+  const params = useParams(); // Access the dynamic route params
+  console.log(params,"kjhkjkjhk");
+  
+  const [id, setId] = useState<any>(null);
+console.log(id,"flsjdfl");
+
+useEffect(() => {
+  if (params.id) {
+    setId(params.id); // Set the dynamic id (B3729047)
+    console.log("Extracted ID:", params.id); // Log the id
+  }
+}, [params]);
    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +75,7 @@ console.log(userInfo?.uuid,"userInf");
     let item = {
       editor_messages: elements,
       user_uuid: userInfo?.uuid,
+      messages_unique_id:id
     };
   
     try {
@@ -450,10 +466,22 @@ console.log(newMessage,"newMessage");
   }, []);
 
   console.log(activeSlide,activeSlideIndex, "progress");
+
+  
+  const openEnvelop=()=>{
+    router.push(`/envelop/${id}`)
+  }
   return (
     <>
    
     <div style={styles.container}>
+
+      <div className="editor_option mt-2 mb-5" >
+        <button className="add_btn" onClick={openEnvelop}>
+
+      Preview
+        </button>
+      </div>
       <div className="editor_option" style={{marginBottom:"15px"}} >
         <div>
           <button
@@ -505,7 +533,7 @@ console.log(newMessage,"newMessage");
         <button  style={{
               padding: "10px",
               borderRadius: "50px",
-            }}  className="add_btn" onClick={sendEditorData}> click</button>
+            }}  className="add_btn" onClick={sendEditorData}> Save data</button>
         </div>
         {/* <div style={{ textAlign: "center" }}>
           <button

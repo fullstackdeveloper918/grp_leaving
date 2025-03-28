@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import EscrowPayment from "./EscrowPayment";
 import axios from "axios";
+import CollectionPayment from "./CollectionPayment";
 
 const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -244,12 +245,21 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
               >
                 Continue to Payment
               </button> */}
-              <EscrowPayment
+              {/* <EscrowPayment
                 closeModal={closeModal}
                 paymentAmount={totalAmount}
                 name={name}
                 brandKey={brandKey}
                 groupId={groupId}
+              /> */}
+              <CollectionPayment
+                closeModal={closeModal}
+                paymentAmount={totalAmount}
+                name={name}
+                brandKey={brandKey}
+                groupId={groupId}
+                amount={totalAmount}
+                 cart_id={groupId} type={"card"}
               />
             </div>
 
