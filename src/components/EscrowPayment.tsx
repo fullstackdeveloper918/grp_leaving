@@ -89,7 +89,7 @@ const EscrowPayment = ({ closeModal, brandKey, groupId,paymentAmount,name }: any
               }),
             }
           );
-          router.replace(`/payment/success`);
+          router.replace(`/payment`);
         },
         prefill: {
           name: "Abhay Singh",

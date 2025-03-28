@@ -151,7 +151,7 @@ const CollectionPayment = ({
             // if (type === "bundle") {
             //   router.push(`/account/bundles`);
             // } else {
-            //   router.push(`/payment/success`);
+            //   router.push(`/payment`);
             // }
           } catch (error) {
             console.error("Error saving payment:", error);

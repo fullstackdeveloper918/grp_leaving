@@ -104,7 +104,7 @@ setState(data)
             if (type === "bundle") {
               router.push(`/account/bundles`);
             } else{
-              router.push(`/payment/success?${responseData?.data?.messages_unique_id}`);
+              router.push(`/paymen?${responseData?.data?.messages_unique_id}`);
             }
             setUniqueId(responseData?.data?.messages_unique_id)
             
@@ -131,7 +131,7 @@ setState(data)
       // if (type === "bundle") {
       //   router.push(`/account/bundles`);
       // } else{
-      //   router.push(`/payment/success?${uniqueId}`);
+      //   router.push(`/payment?${uniqueId}`);
       // }
     } catch (error) {
       console.error("Payment failed", error);
