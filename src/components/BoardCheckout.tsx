@@ -266,7 +266,7 @@ const BoardCheckout = ({data}:any) => {
               Pay with Debit/Credit Card
             </button>
           </a> */}
-          <RazorPay amount={TotalAmount} type={"card"} />
+          <RazorPay amount={TotalAmount} type={"card"}  bundleId={"bundle_card"} />
           {/* <EscrowPayment/> */}
           {/* <CardElement />
           <GooglePay

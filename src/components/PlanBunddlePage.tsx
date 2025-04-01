@@ -138,7 +138,7 @@ const PlanBunddlePage = ({ data2 }: any) => {
         </div>
         <div className="p-2">
           {accessToken ? (
-            <RazorPay amount={TotalAmount} type={"bundle"} />
+            <RazorPay amount={TotalAmount} type={"bundleFor"} bundleId={"bundle_card"} />
           ) : (
             <button type="button" className="mt-6 bg-blue-600 text-blueText w-full py-2 rounded-xl border-2 border-[blueText] hover:bg-blue-700" onClick={()=> router.replace('/login') }>
               Pay Now :${TotalAmount} INR{" "}

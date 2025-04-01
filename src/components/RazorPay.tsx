@@ -16,14 +16,16 @@ interface UserInfo {
   uuid?: string;
 }
 
-const RazorPay = ({ amount, type }: any) => {
+const RazorPay = ({ amount, type,bundleId }: any) => {
   //  const getToken = cookies().get("auth_token")?.value || "";
   //   console.log(getToken, "Access Token");
+    console.log(bundleId, "bundleId");
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const param = useParams();
   console.log(param,"param");
   console.log(userInfo,"userInfo");
+  console.log(type,"qazxsw");
   
   const [state, setState] = useState<string>("");
   const [authToken, setAuthToken] = useState<string>("");
@@ -44,9 +46,9 @@ const RazorPay = ({ amount, type }: any) => {
 
   useEffect(() => {
     const cookies = nookies.get();
-    console.log("cookiesUserInfo",cookies.user_info);
-    const userInfoFromCookie: UserInfo | null = cookies.user_info
-      ? JSON.parse(cookies.user_info)
+    console.log("cookiesUserInfo",cookies.userInfo);
+    const userInfoFromCookie: UserInfo | null = cookies.userInfo
+      ? JSON.parse(cookies.userInfo)
       : null;
     setUserInfo(userInfoFromCookie);
   }, []);
@@ -78,6 +80,7 @@ setState(data)
           const product_id = param.id;
 
           console.log("product_id",product_id)
+          console.log("sadfasdfassfdasf",userInfo)
           // headers["Authorization"] = `Bearer ${getToken}`;
           try {
             const paymentResponse = await fetch("https://magshopify.goaideme.com/razorpay/save-payment", {
@@ -92,7 +95,9 @@ setState(data)
                 product_id: product_id,
                 user_uuid: userInfo?.uuid,
                 paymentId: paymentId,
-                payment_for: type,
+                payment_for: type==="bundle"?"card":"bundle",
+                is_payment_for_both: type==="bundle"?true:false,
+                bundle_uuid: bundleId==="bundle_card"?"":bundleId,
                 collection_link:"sdfsrwr"
               }),
             });
@@ -101,10 +106,10 @@ setState(data)
             }
             const responseData = await paymentResponse.json();
             console.log(responseData,"paymentResponse");
-            if (type === "bundle") {
+            if (type === "bundleFor") {
               router.push(`/account/bundles`);
             } else{
-              router.push(`/paymen?${responseData?.data?.messages_unique_id}`);
+              router.push(`/payment?${responseData?.data?.messages_unique_id}`);
             }
             setUniqueId(responseData?.data?.messages_unique_id)
             

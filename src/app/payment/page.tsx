@@ -1,8 +1,11 @@
 import React from 'react'
+import SuccessPage from '@/components/common/SuccessPage'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+        <SuccessPage/>
+    </div>
   )
 }
 
