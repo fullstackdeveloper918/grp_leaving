@@ -469,6 +469,7 @@ console.log(newMessage,"newMessage");
 
   
   const openEnvelop=()=>{
+    sendEditorData()
     router.push(`/envelop/${id}`)
   }
   return (

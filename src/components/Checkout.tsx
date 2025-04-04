@@ -260,17 +260,53 @@ const Checkout = ({ data }: any) => {
   useEffect(()=>{
     getBundledata()
   },[])
+  const [quantity1,setQuantity]=useState<any>("")
   const quantity:any = 0;
-  const handleRadioChange = () => {
-    if (quantity > 0) {
-      toast.warning(`Remaining quantity: ${quantity}`);
-    }
-    if(quantity===0){
+  console.log(quantity,"quantity");
+  
+  let currentToastId:any = null;
+  // https://magshopify.goaideme.com/card/bundle-quantity-total-count
+  const handleRadioChange = async() => {
+   try {
+    // if (quantity > 0) {
+      // If a toast is already showing, dismiss it
+      if (currentToastId !== null) {
+        toast.dismiss(currentToastId);
+      }
+      let res = await fetch(
+        "https://magshopify.goaideme.com/card/bundle-quantity-total-count",
+        {
+          method: "GET", // Method set to POST
+          headers: {
+            "Content-Type": "application/json", // Indicates that you're sending JSON
+            Authorization: `Bearer ${gettoken}`, // Send the token in the Authorization header
+          },
+          // body: JSON.stringify(requestData) // Stringify the data you want to send in the body
+        }
+      );
+
+      // Parse the response JSON
+      let posts = await res.json();
+      // setBundledata(posts)
+      console.log(posts,"sriweyryertty");
+      setQuantity(posts?.message)
+      // message
+      // Show the warning toast and save the toast ID
+      currentToastId = toast.warning(`Remaining Card Purchase Quantity: ${quantity}`);
+      // currentToastId = toast.warning(`Remaining quantity: ${quantity}`);
+  
+  
+    if (quantity === 0) {
       setBundleOption("bundle");
     }
+   } catch (error) {
+    
+   }
   };
 
-  
+  // useEffect(()=>{
+    
+  // })
   console.log("voucher discount", voucherDiscount);
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-5">

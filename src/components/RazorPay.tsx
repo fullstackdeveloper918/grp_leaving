@@ -109,7 +109,7 @@ setState(data)
             if (type === "bundleFor") {
               router.push(`/account/bundles`);
             } else{
-              router.push(`/payment?${responseData?.data?.messages_unique_id}`);
+              router.push(`/payment?unique_id=${responseData?.data?.messages_unique_id}`);
             }
             setUniqueId(responseData?.data?.messages_unique_id)
             

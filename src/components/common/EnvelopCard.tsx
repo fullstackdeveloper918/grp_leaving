@@ -24,8 +24,8 @@ const Page = React.forwardRef((props: any, ref: any) => {
 });
 Page.displayName = 'Page';
 const EnvelopCard = ({getdata}:any) => {
-  const { id } = useParams(); // Get the dynamic 'id' from URL
-  const [responseData, setResponseData] = useState<any>(null); // Store response data
+  const { id } = useParams(); 
+  const [responseData, setResponseData] = useState<any>(null);
 console.log(getdata,"getdata");
 console.log(responseData,"responseData");
 
