@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Script from "next/script";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import SuccessPage from "@/components/common/SuccessPage";
+import SuccessPage from "@/components/common/Success";
 
 declare global {
   interface Window {

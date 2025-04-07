@@ -1,42 +1,29 @@
-"use client"
+// components/common/Success.tsx
+"use client";  // Ensure this is at the top for client-side rendering
+
 import React, { useEffect, useState } from "react";
 import { CheckCircleIcon, ClipboardIcon } from "@heroicons/react/24/solid";
 import { useSearchParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import Link from "next/link";
 
-const SuccessPage = () => {
-  // const [copySuccess, setCopySuccess] = useState<string>("");
-const searchParams = useSearchParams(); // Access the search params
-console.log(searchParams,"searchParams");
+const Success = ({unique_Id}:any) => {
 
-const [paymentId, setPaymentId] = useState<string | null>(null);
-console.log(paymentId,"paymentId");
-useEffect(() => {
-  // Extract the 'id' query parameter
-  const id = searchParams.get("unique_id"); // Get the 'id' parameter
-  console.log(id,"uououio");
-  
-  if (id) {
-    setPaymentId(id); // Set the value of the query parameter
-  }
-}, [searchParams])
   const handleCopy = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/share/editor/${paymentId}`)
-      .then(() => {
-        toast.success("Link copied successfully")
-        // setCopySuccess("Link copied successfully!");
-        // setTimeout(() => setCopySuccess(""), 2000); // Clear message after 2 seconds
-      })
-      .catch(() => {
-        // setCopySuccess("Failed to copy the link.");
-        // setTimeout(() => setCopySuccess(""), 2000);
-      });
+    if (unique_Id) {
+      navigator.clipboard.writeText(`http://localhost:3000/share/editor/${unique_Id}`)
+        .then(() => {
+          toast.success("Link copied successfully");
+        })
+        .catch(() => {
+          toast.error("Failed to copy the link");
+        });
+    }
   };
 
   return (
     <div className="success-container">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="success-card">
         {/* Steps */}
         <div className="steps-container">
@@ -72,27 +59,27 @@ useEffect(() => {
             <input
               type="text"
               readOnly
-              value={`http://localhost:3000/share/editor/${paymentId}`}
-              // value={`https://groupcavingcards.com/share/${paymentId}`}
+              value={unique_Id ? `http://localhost:3000/share/editor/${unique_Id}` : ""}
               className="shareable-input"
             />
             <button onClick={handleCopy} className="copy-button">
               <ClipboardIcon className="clipboard-icon" />
             </button>
           </div>
-          {/* {copySuccess && <p className="copy-success-message">{copySuccess}</p>} */}
         </div>
 
         {/* Buttons */}
         <div className="button-container">
           <button className="view-receipt-button">View Receipt</button>
-          <Link href={`/share/editor/${paymentId}`}>
-          <button className="sign-card-button">Sign Card</button>
-          </Link>
+          {unique_Id && (
+            <Link href={`/share/editor/${unique_Id}`}>
+              <button className="sign-card-button">Sign Card</button>
+            </Link>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default SuccessPage;
+export default Success;

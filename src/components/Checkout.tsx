@@ -199,14 +199,19 @@ const Checkout = ({ data }: any) => {
   };
   const handlePaymentCardBundle = async () => {
     console.log("Button clicked"); // Check if button click triggers the function
+    if (!bundledata?.data[0]?.product_id || !product_id) {
+      console.error("Missing product_id or bundledata");
+      return; // Exit early if critical data is missing
+    }
     try {
         const requestData = {
             bundle_uuid: bundledata?.data[0]?.product_id,
             card_uuid: product_id
         };
+console.log(requestData,"requestData");
 
         // Add cache control headers and random query string to prevent caching
-        const url = "https://magshopify.goaideme.com/card/purchase-bundle-count?" + new Date().getTime();  // Adding timestamp to avoid caching
+        const url = "https://magshopify.goaideme.com/card/purchase-bundle-count"  // Adding timestamp to avoid caching
 
         let res = await fetch(url, {
             method: "POST", // Method set to POST
@@ -222,9 +227,10 @@ const Checkout = ({ data }: any) => {
         let posts = await res.json();
         console.log(posts, "Response Data"); // Log the response data to check for success
 
-        if (posts?.status===200) {
-            console.log("Payment successful!");
-            // router.push(`/payment?${responseData?.data?.messages_unique_id}`);
+        if (posts?.status==200) {
+            // console.log("Payment successful!");
+            toast.success("payment successful", { autoClose:2000})
+            router.push(`/successfull?unique_id=${posts?.data}`);
         } else {
             console.log("Payment failed:", posts?.message);
         }
@@ -260,8 +266,8 @@ const Checkout = ({ data }: any) => {
   useEffect(()=>{
     getBundledata()
   },[])
-  const [quantity1,setQuantity]=useState<any>("")
-  const quantity:any = 0;
+  const [quantity,setQuantity]=useState<any>("")
+  // const quantity:any = 10;
   console.log(quantity,"quantity");
   
   let currentToastId:any = null;
@@ -292,7 +298,9 @@ const Checkout = ({ data }: any) => {
       setQuantity(posts?.message)
       // message
       // Show the warning toast and save the toast ID
-      currentToastId = toast.warning(`Remaining Card Purchase Quantity: ${quantity}`);
+      if (quantity > 0) {
+        currentToastId = toast.warning(`Remaining Card Purchase Quantity: ${quantity}`);
+      }
       // currentToastId = toast.warning(`Remaining quantity: ${quantity}`);
   
   
