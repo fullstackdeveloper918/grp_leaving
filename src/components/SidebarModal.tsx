@@ -9,11 +9,12 @@ interface SidebarModalProps {
   onClose: () => void;
   data:any,
   setClose:any,
-  isClose:any
+  isClose:any,
+  createlinkuserId:any
   // setEditCollection:any
 }
 
-const SidebarModal: React.FC<SidebarModalProps> = ({ isOpen, onClose,data,setClose,isClose }) => {
+const SidebarModal: React.FC<SidebarModalProps> = ({ isOpen, onClose,data,setClose,isClose,createlinkuserId }) => {
 console.log("databysidebarmodel",data?.collection_title)
 console.log("databysidebarmodel",data)
   const [deliveryOption, setDeliveryOption] = useState("later");
@@ -41,7 +42,7 @@ console.log("cookie value",cookieValue)
 
     // Collect form data
     const formData = {
-      edit_by:cookieValue,
+      edit_by:createlinkuserId,
       brandKey:data?.brandKey,
       linkUuid:data?.uuid,
       collection_title: collectionTitle,

@@ -176,6 +176,7 @@ const gettoken = Cookies.get("auth_token");
         isClose={isClose}
         onClose={() => setIsSidebarOpen(false)}
         data={data?.data}
+        createlinkuserId={cookieValue}
       />
        <SendGiftModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} onClose={() => setIsModalOpen(false)}  onSubmit={handleSend}/>
     </div>

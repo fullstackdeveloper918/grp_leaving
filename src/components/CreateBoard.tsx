@@ -27,34 +27,115 @@ const CreateBoard = ({ data }: any) => {
   const [userInfo, setUserInfo] = useState<any>(null);
   const [uuid, setUuid] = useState<string | null>(null);
   console.log(uuid, "uuid");
+  const [loading1, setLoading1] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
+  const [state,setState]=useState<any>("")
+  // const openModal = () => setIsModalOpen(true);
+   const openModal = async()=>{
+      try {
+        setLoading1(true)
+        const response = await fetch(
+          "https://magshopify.goaideme.com/order/create-token",
+          {
+            // replace '/api/cart' with the correct endpoint
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // 'Authorization': `Bearer ${gettoken}`
+            },
+            body: "",
+          }
+        );
+  
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error("Failed to add item to cart");
+        }
+  
+        const data = await response.json(); // Assuming the response returns JSON
+        console.log(data,"sdfghjkl;");
+        const response1 = await fetch(
+          " https://magshopify.goaideme.com/order/get-products",
+          {
+            // replace '/api/cart' with the correct endpoint
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `Bearer ${data?.data?.access_token}`
+            },
+            body: "",
+          }
+        );
+  
+        // Check if the request was successful
+        if (!response1.ok) {
+          throw new Error("Failed to add item to cart");
+        }
+  
+        const data1 = await response1.json();
+        console.log(data1,"data1");
+        setState(data1)
+        setIsModalOpen(true);
+        // toast.success("Added Successfully", {autoClose:2000});
+      } catch (error) {
+        setLoading1(false)
+      }
+    }
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedImage(null);
   };
   useEffect(() => {
     const cookies = document.cookie.split("; ");
-    const userInfoCookie = cookies.find((cookie) =>
-      cookie.startsWith("user_info=")
+    console.log(cookies, "asdasdasd");
+  
+    // Finding the 'Auth' cookie
+    const authCookie = cookies.find((cookie) =>
+      cookie.startsWith("Auth=")
     );
-
+  
+    if (authCookie) {
+      const cookieValue = authCookie.split("=")[1];
+      console.log(cookieValue, "cookieValue");
+  
+      try {
+        const parsedAuthInfo = JSON.parse(decodeURIComponent(cookieValue));
+        console.log(parsedAuthInfo, "parsedAuthInfo");
+  
+        // Extracting the 'uid' from the Auth cookie
+        if (parsedAuthInfo && parsedAuthInfo.uid) {
+          setUuid(parsedAuthInfo.uid); // Setting the UUID
+          console.log("UID:", parsedAuthInfo.uid);
+        }
+      } catch (error) {
+        console.error("Error parsing Auth cookie", error);
+      }
+    }
+  
+    // Optionally, you can also extract 'userInfo' cookie if needed
+    const userInfoCookie = cookies.find((cookie) =>
+      cookie.startsWith("userInfo=")
+    );
+  
     if (userInfoCookie) {
       const cookieValue = userInfoCookie.split("=")[1];
+      console.log(cookieValue, "userInfo cookieValue");
+  
       try {
         const parsedUserInfo = JSON.parse(decodeURIComponent(cookieValue));
         setUserInfo(parsedUserInfo);
-
-        // Extracting the UUID from the parsed userInfo object
+  
         if (parsedUserInfo && parsedUserInfo.uuid) {
+          console.log(parsedUserInfo, "parsedUserInfo");
           setUuid(parsedUserInfo.uuid);
-          console.log("UUID:", parsedUserInfo.uuid);
+          console.log("UUID from userInfo:", parsedUserInfo.uuid);
         }
       } catch (error) {
         console.error("Error parsing userInfo cookie", error);
       }
     }
   }, []);
+  
   const [collectionTitle, setCollectionTitle] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [loading, setLoading] = useState<any>(false);
@@ -64,6 +145,8 @@ const CreateBoard = ({ data }: any) => {
     selectedGift: "",
   });
   const [brandKeys, setBrandKeys] = useState("");
+  console.log(brandKeys,"brandKeys");
+  
   // Handle collection title change
   const handleCollectionTitleChange = (e: any) => {
     setCollectionTitle(e.target.value);
@@ -97,7 +180,7 @@ const CreateBoard = ({ data }: any) => {
   const handleImageClick = (imageData: any) => {
     setSelectedImage(imageData);
     console.log(imageData, "imageData");
-    setBrandKeys(imageData.brandKey);
+    setBrandKeys(imageData.brand?.brandId);
     setIsModalOpen(true); // Open modal when an image is clicked
   };
 
@@ -114,7 +197,10 @@ const CreateBoard = ({ data }: any) => {
       board_title: collectionTitle,
       board_name: recipientName,
       // gift_card_id:addCard,
-      brand_key: brandKeys,
+      // brandKey:brandKeys,
+      // board_name: string
+      brand_key: brandKeys
+      // user_uuid : string
     };
     console.log(item, "item");
 
@@ -122,18 +208,19 @@ const CreateBoard = ({ data }: any) => {
     // return
     try {
       setLoading(true);
-      const response = await fetch(
-        "https://magshopify.goaideme.com/groupboard/add-groupboard",
-        {
-          // replace '/api/cart' with the correct endpoint
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Indicates that you're sending JSON
-            Authorization: `Bearer ${gettoken}`,
-          },
-          body: JSON.stringify(item),
-        }
-      );
+        const response = await fetch(
+          "https://magshopify.goaideme.com/groupboard/add-groupboard",
+          {
+            // replace '/api/cart' with the correct endpoint
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Indicates that you're sending JSON
+              Authorization: `Bearer ${gettoken}`,
+              "Cache-Control": "no-cache",
+            },
+            body: JSON.stringify(item),
+          }
+        );
 
       // Check if the request was successful
       if (!response.ok) {
@@ -166,9 +253,7 @@ const CreateBoard = ({ data }: any) => {
   //     }
   // }
 
-  const faceValues = selectedImage?.items
-    .map((item: any) => item.faceValue) // Extract faceValue
-    .filter((value: any) => value !== undefined && value !== null); // Filter out undefined or null values
+  const faceValues = selectedImage?.logoUrls[0]; // Filter out undefined or null values
 
   let minFaceValue: number | undefined;
   let maxFaceValue: number | undefined;
@@ -182,7 +267,7 @@ const CreateBoard = ({ data }: any) => {
   } else {
     console.log("No valid face values found.");
   }
-  const selectGiftImage = selectedImage?.imageUrls["278w-326ppi"];
+  const selectGiftImage = selectedImage?.logoUrls[0]
   console.log(selectGiftImage, "selectGiftImage");
   const handleLogin = () => {
     router.push("/login");
@@ -232,6 +317,7 @@ const CreateBoard = ({ data }: any) => {
                 </p>
                 <button
                   type="button"
+                  disabled={loading} 
                   className="flex items-center justify-center border border-dashed border-blue-500 bg-blue-50 rounded-md px-4 text-blue-600 font-medium transition duration-300 hover:bg-blue-100"
                   // onClick={() => setFormData({ ...formData, selectedGift: 'gift card' })} // Update the selected gift here
                   onClick={openModal}
@@ -321,80 +407,63 @@ const CreateBoard = ({ data }: any) => {
 
               {/* Conditionally render based on whether an image is selected */}
               {selectedImage ? (
-                <div className="flex flex-col items-center">
-                  <div className="">
-                    <button className="text-black" onClick={handleBackClick}>
-                      Back
-                    </button>
-                  </div>
-                  <div className="">
-                    <img src={selectGiftImage} alt="" className="" />
-                  </div>
-                  {/* <div className="w-20 h-12 bg-black text-white flex items-center justify-center rounded mb-2">
-                    {selectedImage.brandName}
-                  </div> */}
-                  <h2 className="text-xl font-bold">
-                    {selectedImage.brandName}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    Currency: <span className="font-bold">INR</span>
-                  </p>
-                  {/* <p className="text-sm text-gray-500">
-                    Country: <span className="font-bold">IND</span>
-                  </p> */}
-                  <p className="text-sm leading-6 text-gray-500">
-                    Min Value: <span className="font-bold">{minFaceValue}</span>
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Max Value:<span className="font-bold">{maxFaceValue}</span>
-                  </p>
-                  <p className="text-sm text-gray-500 text-center mt-2">
-                    Contribution Fees:{" "}
-                    <span className="font-bold">
-                      {selectedImage.contributionFees}
-                    </span>
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1 text-center">
-                    (We automatically create multiple gift cards if you go over
-                    the max)
-                  </p>
-                  <Link
-                    href="#"
-                    className="text-sm text-blue-600 hover:underline mt-2"
-                  >
-                    Terms and conditions
-                  </Link>
-                  <button
-                    className="bg-blue-600 text-black px-4 py-2 rounded mt-2 hover:bg-blue-700"
-                    onClick={AddGiftCard}
-                  >
-                    Add Gift Card
-                  </button>
-                </div>
-              ) : (
+          <div className="flex flex-col items-center">
+            <div className="">
+              <button className="text-black" onClick={handleBackClick}>Back</button>
+            </div>
+            <div className="">
+              <img src={selectGiftImage} alt="" className="" />
+            </div>
+            {/* <div className="w-20 h-12 bg-black text-white flex items-center justify-center rounded mb-4">
+              {selectedImage.brandName}
+            </div> */}
+            <h2 className="text-xl font-bold ">{selectedImage.brandName}</h2>
+            <p className="text-sm text-gray-500">Country: <span className="font-bold">IND</span></p>
+            <p className="text-sm text-gray-500">Currency: <span className="font-bold">INR</span></p>
+            <p className="text-sm text-gray-500">Price: <span className="font-bold">{selectedImage?.senderFee}</span></p>
+
+            {/* <p className="text-sm text-gray-500">Min Value: <span className="font-bold">{minFaceValue}</span></p>
+            <p className="text-sm text-gray-500">Max Value:<span className="font-bold">{maxFaceValue}</span></p> */}
+            {/* <p className="text-sm text-gray-500 text-center mt-2">
+              Contribution Fees: <span className="font-bold">{selectedImage.contributionFees}</span>
+            </p> */}
+            <p className="text-xs text-gray-400 mt-1 text-center">
+              (We automatically create multiple gift cards if you go over the max)
+            </p>
+            <Link
+              href="#"
+              className="text-sm text-blue-600 hover:underline mt-2"
+            >
+              Terms and conditions
+            </Link>
+            <button className="bg-blue-600 text-black px-4 py-2 rounded mt-2 hover:bg-blue-700" onClick={AddGiftCard}>
+              Add Gift Card
+            </button>
+          </div>
+        ) : (
                 <div className="relative">
                   {/* Image Grid */}
                   <div className="grid grid-cols-2 gap-4 max-h-80 overflow-y-auto">
-                    {data?.data.map((res: any, index: number) => {
-                      const imageUrl = res.imageUrls["200w-326ppi"]; // You can change this key to any other size if needed
+                  {state?.data?.content.map((res: any, index: number) => {
+                const imageUrl = res.logoUrls[0]; // You can change this key to any other size if needed
 
-                      return (
-                        <div
-                          key={index}
-                          className="border rounded-lg overflow-hidden"
-                          onClick={() => handleImageClick(res)}
-                        >
-                          <img
-                            src={imageUrl}
-                            alt={res.brandName} // Assuming there's a 'brandName' field in your data
-                            className="w-full h-auto object-cover"
-                          />
-                          <p className="text-center p-2 font-medium">
-                            {res.brandName}
-                          </p>
-                        </div>
-                      );
-                    })}
+                return (
+                  <div
+                    key={index}
+                    className="border rounded-lg overflow-hidden"
+                    onClick={() => handleImageClick(res)}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={res?.brand?.brandName} // Assuming there's a 'brandName' field in your data
+                      className="w-full h-auto object-cover"
+                    />
+                    <p className="text-center p-2 font-medium">
+                      {res?.brand?.brandName}
+                    </p>
+                  </div>
+                );
+              })}
                   </div>
 
                   {/* Optional modal button */}

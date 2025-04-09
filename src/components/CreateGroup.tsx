@@ -80,27 +80,55 @@ const [state,setState]=useState<any>("")
     setBrandKeys("")
   };
   useEffect(() => {
-    const cookies = document.cookie.split("; ");
-    const userInfoCookie = cookies.find((cookie) =>
-      cookie.startsWith("user_info=")
-    );
-
-    if (userInfoCookie) {
-      const cookieValue = userInfoCookie.split("=")[1];
-      try {
-        const parsedUserInfo = JSON.parse(decodeURIComponent(cookieValue));
-        setUserInfo(parsedUserInfo);
-
-        // Extracting the UUID from the parsed userInfo object
-        if (parsedUserInfo && parsedUserInfo.uuid) {
-          setUuid(parsedUserInfo.uuid);
-          console.log("UUID:", parsedUserInfo.uuid);
-        }
-      } catch (error) {
-        console.error("Error parsing userInfo cookie", error);
-      }
-    }
-  }, []);
+     const cookies = document.cookie.split("; ");
+     console.log(cookies, "asdasdasd");
+   
+     // Finding the 'Auth' cookie
+     const authCookie = cookies.find((cookie) =>
+       cookie.startsWith("Auth=")
+     );
+   
+     if (authCookie) {
+       const cookieValue = authCookie.split("=")[1];
+       console.log(cookieValue, "cookieValue");
+   
+       try {
+         const parsedAuthInfo = JSON.parse(decodeURIComponent(cookieValue));
+         console.log(parsedAuthInfo, "parsedAuthInfo");
+   
+         // Extracting the 'uid' from the Auth cookie
+         if (parsedAuthInfo && parsedAuthInfo.uid) {
+           setUuid(parsedAuthInfo.uid); // Setting the UUID
+           console.log("UID:", parsedAuthInfo.uid);
+         }
+       } catch (error) {
+         console.error("Error parsing Auth cookie", error);
+       }
+     }
+   
+     // Optionally, you can also extract 'userInfo' cookie if needed
+     const userInfoCookie = cookies.find((cookie) =>
+       cookie.startsWith("userInfo=")
+     );
+   
+     if (userInfoCookie) {
+       const cookieValue = userInfoCookie.split("=")[1];
+       console.log(cookieValue, "userInfo cookieValue");
+   
+       try {
+         const parsedUserInfo = JSON.parse(decodeURIComponent(cookieValue));
+         setUserInfo(parsedUserInfo);
+   
+         if (parsedUserInfo && parsedUserInfo.uuid) {
+           console.log(parsedUserInfo, "parsedUserInfo");
+           setUuid(parsedUserInfo.uuid);
+           console.log("UUID from userInfo:", parsedUserInfo.uuid);
+         }
+       } catch (error) {
+         console.error("Error parsing userInfo cookie", error);
+       }
+     }
+   }, []);
   const [collectionTitle, setCollectionTitle] = useState("");
   const [loading, setLoading] = useState<any>(false);
 const [brandKeys,setBrandKeys]=useState("")

@@ -156,18 +156,18 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
                   key={amount}
                   className={`px-4 py-2 rounded-md border ${
                     !isCustomAmount && selectedAmount === amount
-                      ? "bg-blue-700 text-white"
+                      ? "bg-blue-600 text-blueText"
                       : "bg-gray-200 text-black"
                   }`}
                   onClick={() => handleAmountChange(amount)}
                 >
-                  €{amount}
+                  ₹{amount}
                 </button>
               ))}
               <button
                 className={`px-4 py-2 rounded-md border ${
                   isCustomAmount
-                    ? "bg-blue-700 text-white"
+                    ? "bg-blue-600 text-blueText"
                     : "bg-gray-200 text-black"
                 }`}
                 onClick={() => {
@@ -182,7 +182,7 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
             {isCustomAmount && (
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">
-                  Custom Amount (€)
+                  Custom Amount (₹)
                 </label>
                 <input
                   type="number"
@@ -191,15 +191,15 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
                   onChange={handleCustomAmount}
                   className="border-2 border-gray-300 px-4 py-2 rounded-md w-full"
                 />
-                <p className="text-sm text-gray-500 mt-1">Min €2.00</p>
+                <p className="text-sm text-gray-500 mt-1">Min ₹2.00</p>
               </div>
             )}
 
             <p className="mb-4 text-sm text-gray-600">
-              Service fee: €{serviceFee.toFixed(2)}
+              Service fee: ₹{serviceFee.toFixed(2)}
             </p>
             <p className="mb-4 text-lg font-semibold">
-              Total: €{totalAmount.toFixed(2)}
+              Total: ₹{totalAmount.toFixed(2)}
             </p>
 
             <input
