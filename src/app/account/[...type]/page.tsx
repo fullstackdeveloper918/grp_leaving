@@ -10,20 +10,20 @@ import AccountSlider from "@/components/common/AccountSlider";
 import Cart from "@/components/common/Cart";
 import Table from "@/components/common/Table";
 import api from "@/utils/api";
-import { cookies } from 'next/headers';
-import nookies from 'nookies';
+import { cookies } from "next/headers";
+import nookies from "nookies";
 // import { user } from "@/utils/cybersifyApi";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
-const page = async({ params }: any) => {
-    // const accessToken3 = useAccessToken();
-    // console.log(accessToken3, "accessToken3");
+const page = async ({ params }: any) => {
+  // const accessToken3 = useAccessToken();
+  // console.log(accessToken3, "accessToken3");
   const type = params.type[0];
   console.log(type, "uuusufusd");
-    const cookiesList = cookies();
+  const cookiesList = cookies();
   // const userInfoCookie = cookiesList.get('userInfo');
-  const gettoken:any = cookiesList.get('auth_token');
-  console.log("getTokensss",gettoken)
+  const gettoken: any = cookiesList.get("auth_token");
+  console.log("getTokensss", gettoken);
   // console.log(gettoken.value,"gettoken");
   // let userInfo = null;
   // if (userInfoCookie) {
@@ -46,7 +46,7 @@ const page = async({ params }: any) => {
     method: "GET",
   };
   const data2 = await fetchFromServer(api2);
-  console.log("data2user",data2)
+  console.log("asjdgjagsdjga", data2);
   // const api: any = {
   //   url: `https://magshopify.goaideme.com/user/profile`,
   //   method: "GET",
@@ -61,6 +61,7 @@ const page = async({ params }: any) => {
     method: "GET",
   };
   const posts = await fetchFromServer(data);
+  console.log("data2userposts", posts);
   // if (posts?.message === "Token is expired") {
   //   console.error("Token expired, logging out...");
   //   if (typeof window !== "undefined" || posts?.statusCode === 401) {
@@ -68,7 +69,7 @@ const page = async({ params }: any) => {
   //     window.location.reload();
   //   }
   // }
-  console.log("profileUser",posts);
+  console.log("profileUser", posts);
   // let data = await fetch('https://magshopify.goaideme.com/user/profile', {
   //   method: 'GET', // Method set to GET
   //   headers: {
@@ -98,23 +99,29 @@ const page = async({ params }: any) => {
   // let posts = await data.json();
   // let posts1 = await data1.json();
   // let posts2 = await data2.json();
-//  console.log(userInfo,"sdfsdfsd");
-//  https://magshopify.goaideme.com/user/update-profile
-// https://magshopify.goaideme.com/card/user-paid-bundle-list
+  //  console.log(userInfo,"sdfsdfsd");
+  //  https://magshopify.goaideme.com/user/update-profile
+  // https://magshopify.goaideme.com/card/user-paid-bundle-list
   return (
     <div className=" bg-lightbg flex justify-center items-center">
       <ToastContainer />
       <div className="w-full max-w-[70%] bg-white shadow-md rounded-lg p-8">
         <h1 className="text-3xl font-bold text-center mb-6">Account</h1>
-        <AccountSlider type={type}/>
-        {type==="profile" && <AccountProfile data={posts} userInfo={gettoken?.value}/>}
-        {type==="cart" && <Cart />}
-        {type==="cards" && <AccountCards data={data2}/>}
+        <AccountSlider type={type} />
+        {type === "profile" && (
+          <AccountProfile data={posts} userInfo={gettoken?.value} />
+        )}
+        {type === "cart" && <Cart />}
+        {type === "cards" && <AccountCards data={data2} />}
         {/* {type==="cards" && <AccountCards />} */}
-        {type==="bundles" && <AccountBunddles data={posts} userInfo={gettoken?.value}/>}
-        {type==="email-preferences" && <AccountEmailprefrence data={posts} userInfo={gettoken?.value}/>}
+        {type === "bundles" && (
+          <AccountBunddles data={posts} userInfo={gettoken?.value} />
+        )}
+        {type === "email-preferences" && (
+          <AccountEmailprefrence data={posts} userInfo={gettoken?.value} />
+        )}
         {/* {type==="contributions" && <AccountContribution />} */}
-        {type==="batches" && <Table />}
+        {type === "batches" && <Table />}
       </div>
     </div>
   );

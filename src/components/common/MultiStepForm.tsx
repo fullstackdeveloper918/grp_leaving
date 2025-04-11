@@ -7,7 +7,7 @@ import checkSvg from "../../assets/images/check.svg";
 import api from "@/utils/api";
 import { cookies } from "next/dist/client/components/headers";
 import { toast, ToastContainer } from "react-toastify";
-import nookies, { parseCookies , destroyCookie } from "nookies";
+import nookies, { parseCookies, destroyCookie } from "nookies";
 import { useAccessToken } from "@/app/context/AccessTokenContext";
 const MultiStepForm = ({ params }: any) => {
   const router = useRouter();
@@ -31,11 +31,11 @@ const MultiStepForm = ({ params }: any) => {
   console.log(params, "params");
   const [userInfo, setUserInfo] = useState<any>(null);
   const [uuid, setUuid] = useState<string | null>(null);
-  console.log(uuid, "uuid");
+  console.log(uuid, "uuidforcheck");
   useEffect(() => {
     const cookies = document.cookie.split("; ");
     const userInfoCookie = cookies.find((cookie) =>
-      cookie.startsWith("user_info=")
+      cookie.startsWith("userInfo=")
     );
 
     if (userInfoCookie) {
@@ -170,7 +170,7 @@ const MultiStepForm = ({ params }: any) => {
 
       setLoading(true);
       console.log(item, "item");
-
+      // return;
       // Make the fetch POST request
       const response = await fetch(
         "https://magshopify.goaideme.com/cart/add-cart",
@@ -197,8 +197,8 @@ const MultiStepForm = ({ params }: any) => {
         toast.success("Cart Added Successfully");
       }
 
-      if(response.status === 400){
-        toast.error(data?.error,{autoClose:1000})
+      if (response.status === 400) {
+        toast.error(data?.error, { autoClose: 1000 });
         // router.push('/card/farewell')
       }
       console.log("datamultistepform", data);
@@ -208,7 +208,7 @@ const MultiStepForm = ({ params }: any) => {
 
       if (response.status === 401 && response.statusText === "Unauthorized") {
         toast.error("token is expire");
-        router.replace('/login')
+        router.replace("/login");
         destroyCookie(null, "auth_token");
         window.location.reload();
         // cookies.remove("auth_token")

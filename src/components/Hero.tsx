@@ -29,9 +29,17 @@ const categoriesName = [
   "Welcome",
   "New Home",
 ];
-const Hero = ({ token,userData, ...cardData }: { token?: any; userData?:any; data?: any[] }) => {
+const Hero = ({
+  token,
+  userData,
+  ...cardData
+}: {
+  token?: any;
+  userData?: any;
+  data?: any[];
+}) => {
   // console.log(userData, "props"); // :white_tick: Corrected console.log
-  console.log("tokendata",token)
+  console.log("tokendata", token);
   const [isNewLogin, setIsNewLogin] = useState(false);
   const [displayedText, setDisplayedText] = useState("");
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
@@ -39,16 +47,19 @@ const Hero = ({ token,userData, ...cardData }: { token?: any; userData?:any; dat
   const [categoryName, setCategoryName] = useState(cardData?.data?.[0] || ""); // :white_tick: Avoid undefined error
   // const searchParams = useSearchParams();
   // useEffect(()=>{
-    // const tokenFromUrl = searchParams.get("token");
-    // console.log("tokenFromUrla:", searchParams);
+  // const tokenFromUrl = searchParams.get("token");
+  // console.log("tokenFromUrla:", searchParams);
   //   console.log("object")
   // },[])
   useEffect(() => {
     const storedToken = Cookies.get("auth_token");
     if (token && !storedToken) {
       Cookies.set("auth_token", token);
-      Cookies.set("user_info",userData)
+      Cookies.set("user_info", userData);
       setIsNewLogin(true);
+    }
+    if (token) {
+      Cookies.set("userInfo", userData);
     }
   }, [token]);
   useEffect(() => {
@@ -88,79 +99,84 @@ const Hero = ({ token,userData, ...cardData }: { token?: any; userData?:any; dat
     <>
       <section className="  dark:bg-gray-900   align-middle  homeBanner ">
         <ToastContainer />
-      <div className="slider-containe">
-    <Slider {...settings}>
-      {/********** slide 1 started  ***********/}
-      <div className="relative bg-hero_banner_new bg-cover slider_onebg-cover bg-no-repeat  heroSectionHeight">
-          <img src={banner_flower.src} className="banner_flower" />
-            <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
-              <img src={banner_card.src} className="card_img_left" />
-              <div className=" mx-auto text-center w-full md:text-center xs:text-center lg:text-left ">
-                <h1 className="bannerHeaderH1 text-center  mx-auto">
-                  Group Greeting Cards{" "}
-                  <span className="text-white">for {displayedText || "''"}</span>
-                </h1>
-                <p className="text-white text-center font-medium mx-auto ">
-                  The simplest way to share a virtual greeting card with everyone
-                  in your office.
-                </p>
-                <div className="bannerButton">
-                  <Link href="/create" className=" btnPrimary">
-                    {" "}
-                    Start a group Card
-                  </Link>
-                  <Link href="/demo/fwzDVjvbQ_X" className="btnSecondary ml-3">
-                    {" "}
-                    Try Our Demo Card
-                  </Link>
+        <div className="slider-containe">
+          <Slider {...settings}>
+            {/********** slide 1 started  ***********/}
+            <div className="relative bg-hero_banner_new bg-cover slider_onebg-cover bg-no-repeat  heroSectionHeight">
+              <img src={banner_flower.src} className="banner_flower" />
+              <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
+                <img src={banner_card.src} className="card_img_left" />
+                <div className=" mx-auto text-center w-full md:text-center xs:text-center lg:text-left ">
+                  <h1 className="bannerHeaderH1 text-center  mx-auto">
+                    Group Greeting Cards{" "}
+                    <span className="text-white">
+                      for {displayedText || "''"}
+                    </span>
+                  </h1>
+                  <p className="text-white text-center font-medium mx-auto ">
+                    The simplest way to share a virtual greeting card with
+                    everyone in your office.
+                  </p>
+                  <div className="bannerButton">
+                    <Link href="/create" className=" btnPrimary">
+                      {" "}
+                      Start a group Card
+                    </Link>
+                    <Link
+                      href="/demo/fwzDVjvbQ_X"
+                      className="btnSecondary ml-3"
+                    >
+                      {" "}
+                      Try Our Demo Card
+                    </Link>
+                  </div>
                 </div>
+                <img src={banner_card.src} className="card_img_right" />
               </div>
-              <img src={banner_card.src} className="card_img_right" />
-            </div>
-            <img
-              src={card_absolute_1.src}
-              className="absolute_img"
-              alt="img card"
-            />
+              <img
+                src={card_absolute_1.src}
+                className="absolute_img"
+                alt="img card"
+              />
               <img src={banner_flower.src} className="banner_flower_right" />
-          </div>
-          {/************ slide 1 ended ************/}
-          {/************ slide 2 started ************/}
-          <div className="relative bg-hero_banner_two bg-cover bg-no-repeat  banner_slider_two heroSectionHeight">
-            <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
-              <div className=" mx-auto text-center w-full md:text-lrft  slider_two  xs:text-center lg:text-left ">
-                <h1 className="bannerHeaderH1 text-left ">
-                  Gratitude in Every Moment
-                </h1>
-                <p className=" text-left text-grey font-medium ">
-                  The most convenient way to share a virtual greeting card with
-                  your whole office.
-                </p>
-                <div className="bannerButton text-left">
-                  <Link href="/create" className=" btnPrimary">
-                    {" "}
-                    Start a group Card
-                  </Link>
+            </div>
+            {/************ slide 1 ended ************/}
+            {/************ slide 2 started ************/}
+            <div className="relative bg-hero_banner_two bg-cover bg-no-repeat  banner_slider_two heroSectionHeight">
+              <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
+                <div className=" mx-auto text-center w-full md:text-lrft  slider_two  xs:text-center lg:text-left ">
+                  <h1 className="bannerHeaderH1 text-left ">
+                    Gratitude in Every Moment
+                  </h1>
+                  <p className=" text-left text-grey font-medium ">
+                    The most convenient way to share a virtual greeting card
+                    with your whole office.
+                  </p>
+                  <div className="bannerButton text-left">
+                    <Link href="/create" className=" btnPrimary">
+                      {" "}
+                      Start a group Card
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/************ slide 2 ended ************/}
-          {/************ slide 3 ended ************/}
-           <div className="relative bg-hero_banner_three slider_three bg-cover bg-no-repeat  heroSectionHeight">
-            <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
-              <div className=" mx-auto text-center w-full md:text-center xs:text-center lg:text-left ">
-                <h1 className="bannerHeaderH1 text-center  font-light mx-auto">
-                  New <span className="font-bold">Christmas Cards </span>
-                  Design Available Here
-                </h1>
+            {/************ slide 2 ended ************/}
+            {/************ slide 3 ended ************/}
+            <div className="relative bg-hero_banner_three slider_three bg-cover bg-no-repeat  heroSectionHeight">
+              <div className="container-fluid  py-6 mx-auto  xl:gap-0 lg:py-14  space-y-10 items-center">
+                <div className=" mx-auto text-center w-full md:text-center xs:text-center lg:text-left ">
+                  <h1 className="bannerHeaderH1 text-center  font-light mx-auto">
+                    New <span className="font-bold">Christmas Cards </span>
+                    Design Available Here
+                  </h1>
+                </div>
+                <img src={banner_card.src} className="card_img_right" />
               </div>
-              <img src={banner_card.src} className="card_img_right" />
             </div>
-          </div>
-          {/************ slide 3 ended ************/}
-    </Slider>
-  </div>
+            {/************ slide 3 ended ************/}
+          </Slider>
+        </div>
       </section>
     </>
   );

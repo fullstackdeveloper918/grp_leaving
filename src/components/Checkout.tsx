@@ -31,7 +31,8 @@ const Checkout = ({ data }: any) => {
   console.log(cardType, "cardType");
   const param = useParams();
   const query: any = useSearchParams();
-  console.log(query.cart_uuid, "query");
+  const cartUuid = query.get("cart_uuid");
+  console.log(cartUuid, "cartUuid");
 
   console.log(param.id, "param");
   console.log(data, "datadatadata");
@@ -66,7 +67,7 @@ const Checkout = ({ data }: any) => {
   console.log(selectBundle?.uuid, "selectBundle");
   const handleChange = (e: any) => {
     console.log(e, "lklkl");
-    handleApplyBundleId()
+    handleApplyBundleId();
     const selectedCount = data?.data.find(
       (count: any) => count.number_of_cards === Number(e.target.value)
     );
@@ -170,13 +171,13 @@ const Checkout = ({ data }: any) => {
       toast.error("Voucher is not found", { autoClose: 3000 });
     }
   };
-  const handleApplyBundleId= async () => {
+  const handleApplyBundleId = async () => {
     console.log("object");
     // setVaoucher1(voucher);
     try {
       const requestData = {
-        bundle_uuid:bundledata?.data[0]?.product_id
-       };
+        bundle_uuid: bundledata?.data[0]?.product_id,
+      };
 
       let res = await fetch(
         "https://magshopify.goaideme.com/card/purchase-bundle-counasst",
@@ -192,7 +193,7 @@ const Checkout = ({ data }: any) => {
 
       // Parse the response JSON
       let posts = await res.json();
-      console.log(posts, "jklklkj");  
+      console.log(posts, "jklklkj");
     } catch (error: any) {
       // toast.error("Voucher is not found", { autoClose: 3000 });
     }
@@ -204,42 +205,42 @@ const Checkout = ({ data }: any) => {
       return; // Exit early if critical data is missing
     }
     try {
-        const requestData = {
-            bundle_uuid: bundledata?.data[0]?.product_id,
-            card_uuid: product_id
-        };
-console.log(requestData,"requestData");
+      const requestData = {
+        bundle_uuid: bundledata?.data[0]?.product_id,
+        card_uuid: product_id,
+        cart_uuid: cartUuid,
+      };
+      console.log(requestData, "requestData");
 
-        // Add cache control headers and random query string to prevent caching
-        const url = "https://magshopify.goaideme.com/card/purchase-bundle-count"  // Adding timestamp to avoid caching
+      // Add cache control headers and random query string to prevent caching
+      const url = "https://magshopify.goaideme.com/card/purchase-bundle-count"; // Adding timestamp to avoid caching
 
-        let res = await fetch(url, {
-            method: "POST", // Method set to POST
-            headers: {
-                "Content-Type": "application/json", // Indicates that you're sending JSON
-                Authorization: `Bearer ${gettoken}`, // Send the token in the Authorization header
-                "Cache-Control": "no-cache", // Ensure no caching
-            },
-            body: JSON.stringify(requestData), // Stringify the data you want to send in the body
-        });
+      let res = await fetch(url, {
+        method: "POST", // Method set to POST
+        headers: {
+          "Content-Type": "application/json", // Indicates that you're sending JSON
+          Authorization: `Bearer ${gettoken}`, // Send the token in the Authorization header
+          "Cache-Control": "no-cache", // Ensure no caching
+        },
+        body: JSON.stringify(requestData), // Stringify the data you want to send in the body
+      });
 
-        // Parse the response JSON
-        let posts = await res.json();
-        console.log(posts, "Response Data"); // Log the response data to check for success
+      // Parse the response JSON
+      let posts = await res.json();
+      console.log(posts, "Response Data"); // Log the response data to check for success
 
-        if (posts?.status==200) {
-            // console.log("Payment successful!");
-            toast.success("payment successful", { autoClose:2000})
-            router.push(`/successfull?unique_id=${posts?.data}`);
-        } else {
-            console.log("Payment failed:", posts?.message);
-        }
+      if (posts?.status == 200) {
+        // console.log("Payment successful!");
+        toast.success("payment successful", { autoClose: 2000 });
+        router.push(`/successfull?unique_id=${posts?.data}`);
+      } else {
+        console.log("Payment failed:", posts?.message);
+      }
     } catch (error) {
-        console.error("API request failed", error);  // Log the error
-        // You can also use a toast or any other notification here to show an error message
+      console.error("API request failed", error); // Log the error
+      // You can also use a toast or any other notification here to show an error message
     }
-};
-
+  };
 
   const getBundledata = async () => {
     try {
@@ -257,24 +258,23 @@ console.log(requestData,"requestData");
 
       // Parse the response JSON
       let posts = await res.json();
-      setBundledata(posts)
-      console.log(posts,"hkhkh");
-      
+      setBundledata(posts);
+      console.log(posts, "hkhkh");
     } catch (error) {}
   };
 
-  useEffect(()=>{
-    getBundledata()
-  },[])
-  const [quantity,setQuantity]=useState<any>("")
+  useEffect(() => {
+    getBundledata();
+  }, []);
+  const [quantity, setQuantity] = useState<any>("");
   // const quantity:any = 10;
-  console.log(quantity,"quantity");
-  
-  let currentToastId:any = null;
+  console.log(quantity, "quantity");
+
+  let currentToastId: any = null;
   // https://magshopify.goaideme.com/card/bundle-quantity-total-count
-  const handleRadioChange = async() => {
-   try {
-    // if (quantity > 0) {
+  const handleRadioChange = async () => {
+    try {
+      // if (quantity > 0) {
       // If a toast is already showing, dismiss it
       if (currentToastId !== null) {
         toast.dismiss(currentToastId);
@@ -294,26 +294,25 @@ console.log(requestData,"requestData");
       // Parse the response JSON
       let posts = await res.json();
       // setBundledata(posts)
-      console.log(posts,"sriweyryertty");
-      setQuantity(posts?.message)
+      console.log(posts, "sriweyryertty");
+      setQuantity(posts?.message);
       // message
       // Show the warning toast and save the toast ID
       if (quantity > 0) {
-        currentToastId = toast.warning(`Remaining Card Purchase Quantity: ${quantity}`);
+        currentToastId = toast.warning(
+          `Remaining Card Purchase Quantity: ${quantity}`
+        );
       }
       // currentToastId = toast.warning(`Remaining quantity: ${quantity}`);
-  
-  
-    if (quantity === 0) {
-      setBundleOption("bundle");
-    }
-   } catch (error) {
-    
-   }
+
+      if (quantity === 0) {
+        setBundleOption("bundle");
+      }
+    } catch (error) {}
   };
 
   // useEffect(()=>{
-    
+
   // })
   console.log("voucher discount", voucherDiscount);
   return (
@@ -376,7 +375,7 @@ console.log(requestData,"requestData");
                       ${bundleSingleCard} USD
                     </span>
                   </label>
-                  <label className="flex items-center" >
+                  <label className="flex items-center">
                     <input
                       type="radio"
                       name="bundleOption"
@@ -441,22 +440,25 @@ console.log(requestData,"requestData");
 
           {/* Payment Options */}
           <div className="space-y-4">
-           
             {/* <a href="/card/checkout/1">
             </a> */}
-            {quantity===0?
-            <>
-            <RazorPay
-              amount={TotalAmount}
-              cart_id={query.cart_uuid}
-              type={bundleOption}
-              bundleId={selectBundle?.uuid}
-            />
-            </>
-            :
-          <button className="mt-6 bg-blue-600 text-blueText w-full py-2 rounded-xl border-2 border-[blueText] hover:bg-blue-700" onClick={handlePaymentCardBundle}>
-              Pay with Bundle
-            </button>}
+            {quantity === 0 ? (
+              <>
+                <RazorPay
+                  amount={TotalAmount}
+                  cart_id={query.cart_uuid}
+                  type={bundleOption}
+                  bundleId={selectBundle?.uuid}
+                />
+              </>
+            ) : (
+              <button
+                className="mt-6 bg-blue-600 text-blueText w-full py-2 rounded-xl border-2 border-[blueText] hover:bg-blue-700"
+                onClick={handlePaymentCardBundle}
+              >
+                Pay with Bundle
+              </button>
+            )}
             {/* <EscrowPayment/> */}
             {/* <CardElement />
             <GooglePay

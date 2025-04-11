@@ -30,19 +30,22 @@ const AccountBunddles = ({ userInfo, data }: any) => {
 
       // Parse the response JSON
       let posts = await res.json();
+      console.log(posts, "AccountBundle");
       setState(posts);
-      // console.log(posts, "AccountBundle");
       // toast.success("Preferences Updated Successfully");
     } catch (error) {}
   };
   useEffect(() => {
     submit();
   }, []);
-  console.log(state, "jkshjsd");
-  const filteredData = state?.message?.filter(
-    (item: any) => item.razorInfo.length > 0
-  );
-  console.log("filterDataaccountbundle", filteredData);
+  console.log(state?.message?.bundles, "jkshjsdssssssss");
+  // const filteredData = state?.message?.filter(
+  //   (item: any) => item.razorInfo.length > 0
+  // );
+  // const filteredData = state?.message?.filter(
+  //   (item: any) => item.razorInfo.length > 0
+  // );
+  // console.log("filterDataaccountbundle", filteredData);
   const handlePickBundle = () => {
     // Route to the bundle selection page
     router.push("/pricing");
@@ -59,7 +62,7 @@ const AccountBunddles = ({ userInfo, data }: any) => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="py-2 px-4 text-left font-medium text-gray-600">
-                 Card
+                  Card
                 </th>
                 <th className="py-2 px-4 text-left font-medium text-gray-600">
                   Number of cards
@@ -76,8 +79,8 @@ const AccountBunddles = ({ userInfo, data }: any) => {
               </tr>
             </thead>
             <tbody>
-              {filteredData?.length > 0 ? (
-                filteredData.map((item: any, index: any) => (
+              {state?.message?.bundles?.length > 0 ? (
+                state?.message?.bundles?.map((item: any, index: any) => (
                   <tr key={index} className="border px-3 mt-2">
                     <td className="py-3 px-4">
                       <img
@@ -86,12 +89,16 @@ const AccountBunddles = ({ userInfo, data }: any) => {
                       />
                     </td>
                     <td className="py-3 px-4">
-                      {item.number_of_cards || "N/A"}
+                      {item?.bundle?.number_of_cards || "N/A"}
                     </td>
-                    <td className="py-3 px-4">{item.sale_price || "N/A"}</td>
-                    <td className="py-3 px-4">{item.discount || "N/A"}</td>
+                    <td className="py-3 px-4">
+                      {item?.bundle?.sale_price || "N/A"}
+                    </td>
+                    <td className="py-3 px-4">
+                      {item?.bundle?.discount || "N/A"}
+                    </td>
                     <td className="py-3 px-4 text-blue-600">
-                      {item.currency_type}
+                      {item?.bundle?.currency_type}
                     </td>
                   </tr>
                 ))
