@@ -59,7 +59,7 @@ const Success = ({unique_Id}:any) => {
             <input
               type="text"
               readOnly
-              value={unique_Id ? `http://localhost:3000/share/editor/${unique_Id}` : ""}
+              value={unique_Id ? `https://group-leaving-new.vercel.app/share/editor/${unique_Id}` : ""}
               className="shareable-input"
             />
             <button onClick={handleCopy} className="copy-button">
