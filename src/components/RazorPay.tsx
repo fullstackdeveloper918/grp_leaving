@@ -67,7 +67,8 @@ setState(data)
       }
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Ensure this is set in .env.local
+        key: "rzp_test_NPDqhJnbXJi072", // Ensure this is set in .env.local
+        // key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Ensure this is set in .env.local
         amount: amount,
         currency: "INR",
         name: "Wedding",
