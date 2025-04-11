@@ -61,13 +61,13 @@ const page = async({ params }: any) => {
     method: "GET",
   };
   const posts = await fetchFromServer(data);
-  if (posts?.message === "Token is expired") {
-    console.error("Token expired, logging out...");
-    if (typeof window !== "undefined" || posts?.statusCode === 401) {
-      toast.error("Session expired. Please log in again."); // Or use your toast library
-      window.location.reload();
-    }
-  }
+  // if (posts?.message === "Token is expired") {
+  //   console.error("Token expired, logging out...");
+  //   if (typeof window !== "undefined" || posts?.statusCode === 401) {
+  //     toast.error("Session expired. Please log in again."); // Or use your toast library
+  //     window.location.reload();
+  //   }
+  // }
   console.log("profileUser",posts);
   // let data = await fetch('https://magshopify.goaideme.com/user/profile', {
   //   method: 'GET', // Method set to GET

@@ -37,6 +37,8 @@ type Card = {
 // ];
 
 const AccountCards = ({ data }: any) => {
+  console.log(data,"uouwerouwe");
+  
 // const AccountCards = () => {
   const router = useRouter(); 
 
@@ -200,9 +202,11 @@ const AccountCards = ({ data }: any) => {
                         </button>
                       </Link>
                     ) : (
+                      <Link href={`/share/editor/${card?.message_unique_id}`}>
                       <button className="bg-[#001160] text-white border border-gray-300 px-3 h-10 rounded-2xl hover:bg-[#132DAD]">
                         View Gift
                       </button>
+                      </Link>
                     )}
                   </div>
                   <hr />
