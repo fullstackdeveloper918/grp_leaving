@@ -11,7 +11,7 @@ const Success = ({unique_Id}:any) => {
 
   const handleCopy = () => {
     if (unique_Id) {
-      navigator.clipboard.writeText(`/share/editor/${unique_Id}`)
+      navigator.clipboard.writeText(`https://group-leaving-new.vercel.app/share/editor/${unique_Id}`)
         .then(() => {
           toast.success("Link copied successfully");
         })
