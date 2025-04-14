@@ -18,6 +18,7 @@ import Customcraousal from "./common/Customcraousal";
 import MySignatures from "./common/MySignatures";
 import EnvelopCard from "./common/EnvelopCard";
 import { useRouter } from "next/navigation";
+import CustomEditior from "./common/CustomEditior";
 const { Paragraph, Text } = Typography;
 const DemoCard = ({ params }: any) => {
 
@@ -138,6 +139,7 @@ const DemoCard = ({ params }: any) => {
 
                   {/* {show ? <EditorModal showCard={showCard}/> : <EditorCrousal />} */}
                   {/* {show ? <EditorModal/> : <Customcraousal />} */}
+                  {/* {show ? <EditorModal /> : <CustomEditior />} */}
                   {show ? <EditorModal /> : <Custom />}
                   {/* <Carousel /> */}
                   {/* <EditorModal/> */}

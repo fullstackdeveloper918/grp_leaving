@@ -16,10 +16,14 @@ interface UserInfo {
   uuid?: string;
 }
 
-const RazorPay = ({ amount, type,bundleId }: any) => {
+const RazorPay = ({ amount, type,bundleId,bundleOption }: any) => {
   //  const getToken = cookies().get("auth_token")?.value || "";
   //   console.log(getToken, "Access Token");
     console.log(bundleId, "bundleId");
+    
+    console.log(type, "wertfghdfg");
+    console.log(bundleOption, "sfasdfasd");
+    
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const param = useParams();
@@ -96,7 +100,7 @@ setState(data)
                 product_id: product_id,
                 user_uuid: userInfo?.uuid,
                 paymentId: paymentId,
-                payment_for: type==="bundle"?"card":"bundle",
+                payment_for: type==="single"?"card":"bundle",
                 is_payment_for_both: type==="bundle"?true:false,
                 bundle_uuid: bundleId==="bundle_card"?"":bundleId,
                 collection_link:"sdfsrwr"

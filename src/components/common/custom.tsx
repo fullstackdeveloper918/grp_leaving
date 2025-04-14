@@ -199,6 +199,7 @@ console.log(newMessage,"newMessage");
     setElements([...elements, newMessage]);
     setShowModal(false);
     setEditorContent("");
+    sendEditorData()
   };
  
   // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -275,6 +276,7 @@ console.log(newMessage,"newMessage");
           };
           reader.readAsDataURL(file); // Converts image to base64 (if necessary for display)
         }
+        sendEditorData()
       } else {
         console.error("Invalid response: missing URL");
       }
@@ -350,12 +352,13 @@ console.log(newMessage,"newMessage");
           });
         });
       }
-
+      sendEditorData()
       return new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result as string);
         reader.readAsDataURL(blob);
       });
+      
     } catch (error) {
       console.error("Error fetching image:", error);
       return null;

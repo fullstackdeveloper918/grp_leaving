@@ -55,7 +55,7 @@ const Checkout = ({ data }: any) => {
 
   const [bundleOption, setBundleOption] = useState<any>("single");
   const [numCards, setNumCards] = useState<any>(null);
-  console.log(bundleOption, "bundleOption");
+  console.log(bundleOption, "bundleOptionqqqqqq");
 
   // State to store the selected sale price
   const [salePrice, setSalePrice] = useState("22.45");
@@ -266,7 +266,7 @@ const Checkout = ({ data }: any) => {
   useEffect(() => {
     getBundledata();
   }, []);
-  const [quantity, setQuantity] = useState<any>("");
+  const [quantity, setQuantity] = useState<any>(0);
   // const quantity:any = 10;
   console.log(quantity, "quantity");
 
@@ -442,14 +442,19 @@ const Checkout = ({ data }: any) => {
           <div className="space-y-4">
             {/* <a href="/card/checkout/1">
             </a> */}
+            <>
+            {console.log(bundleOption,"qweqweqw")}
+            </>
             {quantity === 0 ? (
               <>
                 <RazorPay
                   amount={TotalAmount}
                   cart_id={query.cart_uuid}
                   type={bundleOption}
+                  
                   bundleId={selectBundle?.uuid}
                 />
+                {/* {console.log(bundleOption,"123123rwe")} */}
               </>
             ) : (
               <button

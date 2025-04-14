@@ -1,12 +1,15 @@
 import React from 'react'
 import EditorModal from './EditorModal'
 import Custom from './custom'
+import CustomEditior from './CustomEditior'
 
 const CardEditor = () => {
   return (
     <div>
     {/* <EditorModal /> */}
-     <Custom /></div>
+     <Custom />
+     {/* <CustomEditior /> */}
+     </div>
   )
 }
 
