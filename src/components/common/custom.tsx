@@ -304,6 +304,7 @@ console.log(newMessage,"newMessage");
       setGifs(
         response.data.results.map((result: any) => result.media_formats.gif.url)
       );
+      sendEditorData()
     } catch (error) {
       console.error("Error fetching GIFs:", error);
     }
