@@ -17,7 +17,7 @@ const AccountBunddles = ({ userInfo, data }: any) => {
       };
 
       let res = await fetch(
-        "https://magshopify.goaideme.com/card/user-paid-bundle-list",
+        "https://dating.goaideme.com/card/user-paid-bundle-list",
         {
           method: "POST", // Method set to POST
           headers: {

@@ -59,7 +59,7 @@ const AccountCards = ({ data }: any) => {
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const data = await fetch('https://magshopify.goaideme.com/card/users-cards', {
+  //       const data = await fetch('https://dating.goaideme.com/card/users-cards', {
   //         method: 'GET',
   //         headers: {
   //           'Authorization': `Bearer ${gettoken}`,
@@ -175,7 +175,7 @@ const AccountCards = ({ data }: any) => {
                 {/* Image */}
                 <img
                   // src={"https://groupleavingcards.com/images/gift/collection_pot.png"}
-                  src={`https://magshopify.goaideme.com/${card?.images[0]?.card_images[0]}`}
+                  src={`https://dating.goaideme.com/${card?.images[0]?.card_images[0]}`}
                   alt={card.title}
                   className="w-40 h-40 object-cover rounded-lg mr-4"
                 />

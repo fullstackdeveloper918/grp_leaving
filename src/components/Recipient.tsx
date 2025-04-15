@@ -165,7 +165,7 @@ const Recipient = async ({searchParams, params,}: {searchParams: any;params: any
   console.log(searchParams?.category);
  
   const api: Api = {
-    url: `https://magshopify.goaideme.com/card/edit-card/${params?.id}`,
+    url: `https://dating.goaideme.com/card/edit-card/${params?.id}`,
     method: "GET",
     // body: { key: 'value' }
     // comment only
@@ -177,7 +177,7 @@ const Recipient = async ({searchParams, params,}: {searchParams: any;params: any
     (card) =>
       card.type === searchParams?.category && card.id === Number(params?.id)
   );
-  // console.log(`https://magshopify.goaideme.com/${data?.data?.collection_image}`,"poopopopop");
+  // console.log(`https://dating.goaideme.com/${data?.data?.collection_image}`,"poopopopop");
   const showImage = data?.data[0].images[0]?.card_images[0];
   console.log(showImage, "showImage");
 
@@ -198,7 +198,7 @@ const Recipient = async ({searchParams, params,}: {searchParams: any;params: any
             {data?.data ? (
               <span>
                 <Image
-                  src={`https://magshopify.goaideme.com/${showImage}`}
+                  src={`https://dating.goaideme.com/${showImage}`}
                   alt={`Card type: ${data?.data?.title}`}
                   className="rounded-lg object-cover"
                   height={300}

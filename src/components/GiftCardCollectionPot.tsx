@@ -19,7 +19,7 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
     try {
 
       const response1 = await fetch(
-        "https://magshopify.goaideme.com/order/create-token",
+        "https://dating.goaideme.com/order/create-token",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",
@@ -40,7 +40,7 @@ const GiftCardCollectionPot = ({ brandKey, groupId }: any) => {
 
 
       const response = await fetch(
-        ` https://magshopify.goaideme.com/order/get-single-product?product_id=${brandKey}`, // Sending brandKey as query parameter
+        ` https://dating.goaideme.com/order/get-single-product?product_id=${brandKey}`, // Sending brandKey as query parameter
         {
           method: "GET", // No body for GET requests
           headers: {

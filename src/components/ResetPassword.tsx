@@ -16,7 +16,7 @@ const ResetPassword = () => {
            email:email
           };
       const response = await fetch(
-        "https://magshopify.goaideme.com/user/forgot-password",
+        "https://dating.goaideme.com/user/forgot-password",
         {
           method: "POST",
           headers: {

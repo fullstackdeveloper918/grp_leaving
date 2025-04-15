@@ -49,7 +49,7 @@ const CollectionPayment = ({
   const fetchGiftCard = async () => {
     try {
       const response = await fetch(
-        "https://magshopify.goaideme.com/order/create-token",
+        "https://dating.goaideme.com/order/create-token",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",
@@ -113,7 +113,7 @@ const CollectionPayment = ({
 
           try {
             const paymentResponse = await fetch(
-              "https://magshopify.goaideme.com/order/create-orders",
+              "https://dating.goaideme.com/order/create-orders",
               {
                 method: "POST",
                 headers: {

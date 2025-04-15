@@ -4,9 +4,9 @@ const superagent = SuperagentPromise(_superagent, global.Promise);
 import { parseCookies } from 'nookies';
 import { info } from "console";
 
-const API_ROOT = 'https://magshopify.goaideme.com/';
+const API_ROOT = 'https://dating.goaideme.com/';
 // const API_ROOT = process.env.NEXT_PUBLIC_LIVE_API_URL;
-// https://magshopify.goaideme.com/user/register
+// https://dating.goaideme.com/user/register
 const BUCKET_ROOT = `https://shared2.fra1.digitaloceanspaces.com/shared2/`;
 
 const API_FILE_ROOT_MEDIUM = `${BUCKET_ROOT}image/medium/`;

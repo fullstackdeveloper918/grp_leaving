@@ -34,7 +34,7 @@ const page = async ({ params }: any) => {
   //   }
   // }
   // const api1: any = {
-  //   url: `https://magshopify.goaideme.com/cart/cart-listing`,
+  //   url: `https://dating.goaideme.com/cart/cart-listing`,
   //   method: "GET",
   //   // headers: {
   //   //   'authorization': `Bearer ${gettoken.value}` // Send the token in the Authorization header
@@ -42,13 +42,13 @@ const page = async ({ params }: any) => {
   // };
   // const data1 = await fetchFromServer(api1);
   const api2: any = {
-    url: `https://magshopify.goaideme.com/card/users-cards`,
+    url: `https://dating.goaideme.com/card/users-cards`,
     method: "GET",
   };
   const data2 = await fetchFromServer(api2);
   console.log("asjdgjagsdjga", data2);
   // const api: any = {
-  //   url: `https://magshopify.goaideme.com/user/profile`,
+  //   url: `https://dating.goaideme.com/user/profile`,
   //   method: "GET",
   //   // body: { key: 'value' }
   // };
@@ -57,7 +57,7 @@ const page = async ({ params }: any) => {
   // const token = userInfo.token;
   // console.log(token,"tokfdfdfdfen");
   const data: any = {
-    url: `https://magshopify.goaideme.com/user/profile`,
+    url: `https://dating.goaideme.com/user/profile`,
     method: "GET",
   };
   const posts = await fetchFromServer(data);
@@ -70,7 +70,7 @@ const page = async ({ params }: any) => {
   //   }
   // }
   console.log("profileUser", posts);
-  // let data = await fetch('https://magshopify.goaideme.com/user/profile', {
+  // let data = await fetch('https://dating.goaideme.com/user/profile', {
   //   method: 'GET', // Method set to GET
   //   headers: {
   //     'Authorization': `Bearer ${gettoken?.value}` // Send the token in the Authorization header
@@ -82,13 +82,13 @@ const page = async ({ params }: any) => {
   //   // router.replace("/login");
   //   window.location.reload();
   // }
-  // let data1 = await fetch('https://magshopify.goaideme.com/cart/cart-listing', {
+  // let data1 = await fetch('https://dating.goaideme.com/cart/cart-listing', {
   //   method: 'GET', // Method set to GET
   //   headers: {
   //     'Authorization': `Bearer ${gettoken?.value}` // Send the token in the Authorization header
   //   }
   // });
-  // let data2 = await fetch('https://magshopify.goaideme.com/card/card-listing', {
+  // let data2 = await fetch('https://dating.goaideme.com/card/card-listing', {
   //   method: 'GET', // Method set to GET
   //   headers: {
   //     'Authorization': `Bearer ${gettoken?.value}` // Send the token in the Authorization header
@@ -100,8 +100,8 @@ const page = async ({ params }: any) => {
   // let posts1 = await data1.json();
   // let posts2 = await data2.json();
   //  console.log(userInfo,"sdfsdfsd");
-  //  https://magshopify.goaideme.com/user/update-profile
-  // https://magshopify.goaideme.com/card/user-paid-bundle-list
+  //  https://dating.goaideme.com/user/update-profile
+  // https://dating.goaideme.com/card/user-paid-bundle-list
   return (
     <div className=" bg-lightbg flex justify-center items-center">
       <ToastContainer />

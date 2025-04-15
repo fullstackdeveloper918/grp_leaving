@@ -55,7 +55,7 @@ console.log("cookie value",cookieValue)
 
     try {
       // Send form data to the API (replace with your API endpoint)
-      const response = await fetch("https://magshopify.goaideme.com/razorpay/update-link", {
+      const response = await fetch("https://dating.goaideme.com/razorpay/update-link", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
