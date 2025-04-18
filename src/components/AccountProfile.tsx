@@ -42,7 +42,7 @@ const [invoiceDetails, setInvoiceDetails] = useState(data?.data?.additional_invo
       additional_invoice:invoiceDetails
     };
     
-    let res = await fetch('https://dating.goaideme.com/user/update-profile', {
+    let res = await fetch('https://magshopify.goaideme.com/user/update-profile', {
       method: 'POST', // Method set to POST
       headers: {
         'Content-Type': 'application/json', // Indicates that you're sending JSON
@@ -69,7 +69,7 @@ const [invoiceDetails, setInvoiceDetails] = useState(data?.data?.additional_invo
    }
   };
 
-  // https://dating.goaideme.com/user/update-profile
+  // https://magshopify.goaideme.com/user/update-profile
 
   // useEffect(() => {
   //   const getData = async () => {

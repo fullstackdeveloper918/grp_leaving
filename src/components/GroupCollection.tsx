@@ -46,7 +46,7 @@ const gettoken = Cookies.get("auth_token");
 
     try {
       const response = await fetch(
-        "https://dating.goaideme.com/razorpay/locked-collecton-link",
+        "https://magshopify.goaideme.com/razorpay/locked-collecton-link",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",
@@ -78,7 +78,7 @@ const gettoken = Cookies.get("auth_token");
         user_uuid:cookieValue
     }
     try {
-      const response = await fetch("https://dating.goaideme.com/razorpay/submit-now", {
+      const response = await fetch("https://magshopify.goaideme.com/razorpay/submit-now", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

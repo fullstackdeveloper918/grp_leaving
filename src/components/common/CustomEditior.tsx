@@ -52,7 +52,7 @@ const CustomEditior = () => {
         user_uuid: ""
       } as any
       try {
-        const response = await fetch("https://dating.goaideme.com/card/add-editor-messages", {
+        const response = await fetch("https://magshopify.goaideme.com/card/add-editor-messages", {
           method: "POST",
           body: JSON.stringify(item),
         });
@@ -276,7 +276,7 @@ const CustomEditior = () => {
         formData.append("file", file);
   
         // Make the POST request with the form data (multipart/form-data)
-        const response = await fetch("https://dating.goaideme.com/card/update-editor-messages", {
+        const response = await fetch("https://magshopify.goaideme.com/card/update-editor-messages", {
           method: "POST",
           body: formData,
         });
@@ -300,7 +300,7 @@ const CustomEditior = () => {
                 // Creating the object to store the image data
                 const newImage = {
                   type: "image",
-                  content: `https://dating.goaideme.com/${imageUrl}`,  // Use the URL from the API response
+                  content: `https://magshopify.goaideme.com/${imageUrl}`,  // Use the URL from the API response
                   slideIndex: activeSlideIndex + 1,  // Slide index for reference
                   x: 0,  // Starting X position (can be updated as needed)
                   y: 0,  // Starting Y position (can be updated as needed)

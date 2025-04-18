@@ -7,7 +7,7 @@ import React from "react";
 const page = async({ searchParams,params }:any) => {
   console.log(params,"mnmnnm");
   const api2: Api = {
-    url: `https://dating.goaideme.com/card/bundle-list`,
+    url: `https://magshopify.goaideme.com/card/bundle-list`,
     method: "GET",
     // body: { key: 'value' }
     // comment only

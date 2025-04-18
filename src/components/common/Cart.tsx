@@ -23,7 +23,7 @@ const Cart = () => {
   const getdata = async () => {
     try {
       let res = await fetch(
-        "https://dating.goaideme.com/cart/cart-listing",
+        "https://magshopify.goaideme.com/cart/cart-listing",
         {
           method: "GET",
           headers: {
@@ -76,7 +76,7 @@ const Cart = () => {
             >
               <div className="flex items-center w-full">
                 <img
-                  src={`https://dating.goaideme.com/${card?.images[0]?.card_images[0]}`}
+                  src={`https://magshopify.goaideme.com/${card?.images[0]?.card_images[0]}`}
                   alt={card.title}
                   className="w-40 h-40 object-cover rounded-lg mr-4"
                 />

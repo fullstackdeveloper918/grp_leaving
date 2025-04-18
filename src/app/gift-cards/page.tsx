@@ -11,7 +11,7 @@ const page = async() => {
 
 
   
-  let data = await fetch('https://dating.goaideme.com/tango/fetch-data', {
+  let data = await fetch('https://magshopify.goaideme.com/tango/fetch-data', {
     method: 'GET', // Method set to GET
     headers: {
       'Cache-Control': 'no-cache',

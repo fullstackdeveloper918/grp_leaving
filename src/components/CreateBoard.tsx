@@ -35,7 +35,7 @@ const CreateBoard = ({ data }: any) => {
       try {
         setLoading1(true)
         const response = await fetch(
-          "https://dating.goaideme.com/order/create-token",
+          "https://magshopify.goaideme.com/order/create-token",
           {
             // replace '/api/cart' with the correct endpoint
             method: "POST",
@@ -55,7 +55,7 @@ const CreateBoard = ({ data }: any) => {
         const data = await response.json(); // Assuming the response returns JSON
         console.log(data,"sdfghjkl;");
         const response1 = await fetch(
-          " https://dating.goaideme.com/order/get-products",
+          " https://magshopify.goaideme.com/order/get-products",
           {
             // replace '/api/cart' with the correct endpoint
             method: "POST",
@@ -209,7 +209,7 @@ const CreateBoard = ({ data }: any) => {
     try {
       setLoading(true);
         const response = await fetch(
-          "https://dating.goaideme.com/groupboard/add-groupboard",
+          "https://magshopify.goaideme.com/groupboard/add-groupboard",
           {
             // replace '/api/cart' with the correct endpoint
             method: "POST",

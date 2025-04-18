@@ -7,7 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 const GoogleLoginPage = () => {
   const handleGoogleLogin = () => {
     // Redirect user to backend Google OAuth URL
-    window.location.href = "https://dating.goaideme.com/social/google";
+    window.location.href = "https://magshopify.goaideme.com/social/google";
   };
 
   return (

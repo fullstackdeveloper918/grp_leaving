@@ -26,7 +26,7 @@ const [state,setState]=useState<any>("")
     try {
       setLoading(true)
       const response = await fetch(
-        "https://dating.goaideme.com/order/create-token",
+        "https://magshopify.goaideme.com/order/create-token",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",
@@ -46,7 +46,7 @@ const [state,setState]=useState<any>("")
       const data = await response.json(); // Assuming the response returns JSON
       console.log(data,"sdfghjkl;");
       const response1 = await fetch(
-        " https://dating.goaideme.com/order/get-products",
+        " https://magshopify.goaideme.com/order/get-products",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",
@@ -194,7 +194,7 @@ const gettoken = Cookies.get("auth_token");
     try {
       setLoading(true)
       const response = await fetch(
-        "https://dating.goaideme.com/razorpay/create-link",
+        "https://magshopify.goaideme.com/razorpay/create-link",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",

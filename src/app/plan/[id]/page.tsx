@@ -8,7 +8,7 @@ const page = async({params}:any) => {
 
   console.log(params.id,"chhchc");
   const api2: Api = {
-    url: `https://dating.goaideme.com/card/single-bundle-detail/${params.id}`,
+    url: `https://magshopify.goaideme.com/card/single-bundle-detail/${params.id}`,
     method: "GET",
     // body: { key: 'value' }
     // comment only

@@ -19,7 +19,7 @@ const Page: React.FC<PageProps> = ({ params, searchParams }) => {
       try {
         console.log(params.id, "Fetching Data...");
         const response = await fetch(
-          `https://dating.goaideme.com/razorpay/single-link-listing/${params.id}`,
+          `https://magshopify.goaideme.com/razorpay/single-link-listing/${params.id}`,
           {
             method: "GET",
             headers: {

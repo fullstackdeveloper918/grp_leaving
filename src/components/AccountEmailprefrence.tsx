@@ -36,7 +36,7 @@ const AccountEmailprefrence = ({ userInfo, data }: any) => {
       };
 
       let res = await fetch(
-        "https://dating.goaideme.com/user/email-preferences",
+        "https://magshopify.goaideme.com/user/email-preferences",
         {
           method: "POST", // Method set to POST
           headers: {
