@@ -32,7 +32,48 @@ interface UserInfo {
   email: string;
   uuid?: string;
 }
-
+const initialSlides = [
+  {
+    id: "slide-1",
+    title: "Development",
+    subtitle: "SCSS Only Slider",
+    text: "Learn to create a SCSS-only responsive slider.",
+    link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+    card_img: SlideImg_0,
+  },
+  {
+    id: "slide-2",
+    title: "Web Design",
+    subtitle: "Creative Animations",
+    text: "Explore modern web design techniques.",
+    link: "https://medium.com/web-design",
+    card_img: SlideImg_1,
+  },
+  {
+    id: "slide-3",
+    title: "JavaScript",
+    subtitle: "Advanced ES6 Features",
+    text: "Master JavaScript ES6+ features in depth.",
+    link: "https://javascript.info/",
+    card_img: SlideImg_2,
+  },
+  {
+    id: "slide-4",
+    title: "React",
+    subtitle: "State Management",
+    text: "A guide to managing state effectively in React.",
+    link: "https://reactjs.org/docs/hooks-intro.html",
+    card_img: SlideImg_3,
+  },
+  {
+    id: "slide-5",
+    title: "Next.js",
+    subtitle: "Optimizing Performance",
+    text: "Learn Next.js best practices for fast web apps.",
+    link: "https://nextjs.org/docs/advanced-features",
+    card_img: SlideImg_4,
+  },
+];
 const Custom: React.FC = () => {
   const router = useRouter();
   const params = useParams();
@@ -46,6 +87,7 @@ const Custom: React.FC = () => {
   const [elements, setElements] = useState<any[]>([]);
   const [editorContent, setEditorContent] = useState("");
   const sliderRef = useRef<HTMLInputElement>(null);
+console.log(id,"popo");
 
   useEffect(() => {
     if (params.id) {
@@ -73,49 +115,84 @@ const Custom: React.FC = () => {
       localStorage.setItem("slideElements", JSON.stringify(elements));
     }
   }, [elements]);
+console.log(elements,"wertyui");
 
-  const [slides, setSlides] = useState<any>([
-    {
-      id: "slide-1",
-      title: "Development",
-      subtitle: "SCSS Only Slider",
-      text: "Learn to create a SCSS-only responsive slider.",
-      link: "https://blog.significa.pt/css-only-slider-71727effff0b",
-      card_img: SlideImg_0,
-    },
-    {
-      id: "slide-2",
-      title: "Web Design",
-      subtitle: "Creative Animations",
-      text: "Explore modern web design techniques.",
-      link: "https://medium.com/web-design",
-      card_img: SlideImg_1,
-    },
-    {
-      id: "slide-3",
-      title: "JavaScript",
-      subtitle: "Advanced ES6 Features",
-      text: "Master JavaScript ES6+ features in depth.",
-      link: "https://javascript.info/",
-      card_img: SlideImg_2,
-    },
-    {
-      id: "slide-4",
-      title: "React",
-      subtitle: "State Management",
-      text: "A guide to managing state effectively in React.",
-      link: "https://reactjs.org/docs/hooks-intro.html",
-      card_img: SlideImg_3,
-    },
-    {
-      id: "slide-5",
-      title: "Next.js",
-      subtitle: "Optimizing Performance",
-      text: "Learn Next.js best practices for fast web apps.",
-      link: "https://nextjs.org/docs/advanced-features",
-      card_img: SlideImg_4,
-    },
-  ]);
+const [slides, setSlides] = useState<any>([]);
+
+useEffect(() => {
+  const storedElements = localStorage.getItem("slideElements");
+
+  if (storedElements) {
+    const parsed = JSON.parse(storedElements);
+    // setParsedElements(parsed); // assuming you use this elsewhere
+
+    // Get max slideIndex from parsed elements
+    const maxIndex = Math.max(...parsed.map((el: any) => el.slideIndex));
+
+    // Define initial slides (your default slides)
+    const initialSlides = [
+      {
+        id: "slide-1",
+        title: "Development",
+        subtitle: "SCSS Only Slider",
+        text: "Learn to create a SCSS-only responsive slider.",
+        link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+        card_img: "https://groupleavingcards.com/assets/design/617318f94c962c605abdeabb.jpg",
+      },
+      {
+        id: "slide-2",
+        title: "Web Design",
+        subtitle: "Creative Animations",
+        text: "Explore modern web design techniques.",
+        link: "https://medium.com/web-design",
+        card_img: "https://groupleavingcards.com/assets/design/66bd382d51e4bce9bdd31fc6_sm.avif",
+      },
+      {
+        id: "slide-3",
+        title: "JavaScript",
+        subtitle: "Advanced ES6 Features",
+        text: "Master JavaScript ES6+ features in depth.",
+        link: "https://javascript.info/",
+        card_img: "https://groupleavingcards.com/assets/design/66e30136ffa5cb04d55d990e_sm.avif",
+      },
+      {
+        id: "slide-4",
+        title: "React",
+        subtitle: "State Management",
+        text: "A guide to managing state effectively in React.",
+        link: "https://reactjs.org/docs/hooks-intro.html",
+        card_img: "https://groupleavingcards.com/assets/design/66967675b0d2b479aa568c98_sm.avif",
+      },
+      {
+        id: "slide-5",
+        title: "Next.js",
+        subtitle: "Optimizing Performance",
+        text: "Learn Next.js best practices for fast web apps.",
+        link: "https://nextjs.org/docs/advanced-features",
+        card_img: "https://groupleavingcards.com/assets/design/66d88499b4fb75024aa2d8de_sm.avif",
+      },
+    ];
+
+    // Create a new array of slides that includes placeholders if needed
+    const filledSlides = [...initialSlides];
+
+    for (let i = initialSlides.length; i <= maxIndex; i++) {
+      filledSlides.push({
+        id: `slide-${i + 1}`,
+        title: `Slide ${i + 1}`,
+        subtitle: "Placeholder Subtitle",
+        text: "This is a dynamically generated slide.",
+        link: "#",
+        card_img: `https://via.placeholder.com/300x200?text=Slide+${i + 1}`,
+      });
+    }
+
+    // Update state with the new full list of slides
+    setSlides(filledSlides);
+  }
+}, []);
+
+
 
   const sendEditorData = async () => {
     const item = {
@@ -403,11 +480,7 @@ const Custom: React.FC = () => {
   return (
     <>
       <div className="card-carousel-container" id="main-carousle">
-        {/* <div className="editor-options mt-2 mb-5">
-          <button className="add-btn" onClick={openEnvelop}>
-            Preview
-          </button>
-        </div> */}
+        
       <div className="editor_option" style={{ marginBottom: "15px" }} >
           <div>
             <button
@@ -455,6 +528,14 @@ const Custom: React.FC = () => {
               +
             </button>
           </div>
+          {id=="fwzDVjvbQ_X" ?"":(
+
+          <div style={{ textAlign: "center" }}>
+          <button className="add-btn" onClick={openEnvelop}>
+            Preview
+          </button>
+        </div>
+          )}
           {/* <div style={{ textAlign: "center" }}>
             <button style={{
               padding: "10px",
@@ -478,6 +559,8 @@ const Custom: React.FC = () => {
             <div className="carousel-slides">
               {slides.map((slide:any, index:any) => {
                 // Calculate position classes
+                console.log(slide,"jlgfj");
+                
                 let positionClass = "slide-hidden";
 
                 if (index === activeSlideIndex) {
@@ -501,7 +584,7 @@ const Custom: React.FC = () => {
                     {slide?.card_img &&
                     <div className="slide-content">
                       <img
-                        src={slide.card_img.src || "/placeholder.svg"}
+                        src={typeof slide.card_img === 'string' ? slide.card_img : slide.card_img?.src}
                         alt={`slide-${index + 1}`}
                         className="slide-image"
                       />
