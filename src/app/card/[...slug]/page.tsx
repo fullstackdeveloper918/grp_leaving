@@ -6,7 +6,7 @@ import { Api } from "@/interfaces/interfaces";
   const page = async({params}:any) => {
  console.log(params,"params");
  const api: Api = {
-  url: `https://magshopify.goaideme.com/card/collection-listing`,
+  url: `https://dating.goaideme.com/card/collection-listing`,
   method: "GET",
   // body: { key: 'value' }
   // comment only

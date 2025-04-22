@@ -423,10 +423,10 @@ const HomeCategorySection = async({params,searchParams}:any) => {
  
  //  Sidebar
  
- let data = await fetch('https://magshopify.goaideme.com/card/collection-listing', { cache: 'no-store' })
+ let data = await fetch('https://dating.goaideme.com/card/collection-listing', { cache: 'no-store' })
  let data1 = await data.json();
    console.log(data1, "qwe323355");
- //  const url = 'https://magshopify.goaideme.com/card/collection-listing';
+ //  const url = 'https://dating.goaideme.com/card/collection-listing';
  
  //  const response1 = await fetch(url, {
  //   method: 'GET',
@@ -449,7 +449,7 @@ const HomeCategorySection = async({params,searchParams}:any) => {
    // All cards
  
    const api2: Api = {
-     url: `https://magshopify.goaideme.com/card/single-card-listing/${collectionType}`,
+     url: `https://dating.goaideme.com/card/single-card-listing/${collectionType}`,
      method: "GET",
      // body: { key: 'value' }
      // comment only
@@ -480,7 +480,7 @@ const HomeCategorySection = async({params,searchParams}:any) => {
                 <Link href={`/card/new/${card?.uuid}?category=${card?.title}`}>
                   <Image
                     className="rounded-t-lg w-full h-full object-cover"
-                    src={`https://magshopify.goaideme.com/${card?.images[0]?.card_images[0]}`}
+                    src={`https://dating.goaideme.com/${card?.images[0]?.card_images[0]}`}
                     alt="card-img"
                     width={100}
                     height={100}
@@ -498,7 +498,7 @@ const HomeCategorySection = async({params,searchParams}:any) => {
                 <Link href={`/card/new/${card?.uuid}?category=${card?.title}`}>
                   <Image
                     className="rounded-t-lg w-full h-full object-cover"
-                    src={`https://magshopify.goaideme.com/${card?.images[0]?.card_images[0]}`}
+                    src={`https://dating.goaideme.com/${card?.images[0]?.card_images[0]}`}
                     alt="card-img"
                     width={500}
                     height={300}

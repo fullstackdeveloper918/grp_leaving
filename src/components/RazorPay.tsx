@@ -88,7 +88,7 @@ setState(data)
           console.log("sadfasdfassfdasf",userInfo)
           // headers["Authorization"] = `Bearer ${getToken}`;
           try {
-            const paymentResponse = await fetch("https://magshopify.goaideme.com/razorpay/save-payment", {
+            const paymentResponse = await fetch("https://dating.goaideme.com/razorpay/save-payment", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

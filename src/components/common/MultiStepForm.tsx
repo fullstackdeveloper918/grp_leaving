@@ -173,7 +173,7 @@ const MultiStepForm = ({ params }: any) => {
       // return;
       // Make the fetch POST request
       const response = await fetch(
-        "https://magshopify.goaideme.com/cart/add-cart",
+        "https://dating.goaideme.com/cart/add-cart",
         {
           // replace '/api/cart' with the correct endpoint
           method: "POST",

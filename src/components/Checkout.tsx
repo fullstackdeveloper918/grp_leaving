@@ -143,7 +143,7 @@ const Checkout = ({ data }: any) => {
       };
 
       let res = await fetch(
-        "https://magshopify.goaideme.com/discount/is-voucher-valid",
+        "https://dating.goaideme.com/discount/is-voucher-valid",
         {
           method: "POST", // Method set to POST
           headers: {
@@ -180,7 +180,7 @@ const Checkout = ({ data }: any) => {
       };
 
       let res = await fetch(
-        "https://magshopify.goaideme.com/card/purchase-bundle-counasst",
+        "https://dating.goaideme.com/card/purchase-bundle-counasst",
         {
           method: "POST", // Method set to POST
           headers: {
@@ -213,7 +213,7 @@ const Checkout = ({ data }: any) => {
       console.log(requestData, "requestData");
 
       // Add cache control headers and random query string to prevent caching
-      const url = "https://magshopify.goaideme.com/card/purchase-bundle-count"; // Adding timestamp to avoid caching
+      const url = "https://dating.goaideme.com/card/purchase-bundle-count"; // Adding timestamp to avoid caching
 
       let res = await fetch(url, {
         method: "POST", // Method set to POST
@@ -245,7 +245,7 @@ const Checkout = ({ data }: any) => {
   const getBundledata = async () => {
     try {
       let res = await fetch(
-        "https://magshopify.goaideme.com/razorpay/puchased-bundle-array",
+        "https://dating.goaideme.com/razorpay/puchased-bundle-array",
         {
           method: "GET", // Method set to POST
           headers: {
@@ -271,7 +271,7 @@ const Checkout = ({ data }: any) => {
   console.log(quantity, "quantity");
 
   let currentToastId: any = null;
-  // https://magshopify.goaideme.com/card/bundle-quantity-total-count
+  // https://dating.goaideme.com/card/bundle-quantity-total-count
   const handleRadioChange = async () => {
     try {
       // if (quantity > 0) {
@@ -280,7 +280,7 @@ const Checkout = ({ data }: any) => {
         toast.dismiss(currentToastId);
       }
       let res = await fetch(
-        "https://magshopify.goaideme.com/card/bundle-quantity-total-count",
+        "https://dating.goaideme.com/card/bundle-quantity-total-count",
         {
           method: "GET", // Method set to POST
           headers: {

@@ -36,12 +36,12 @@ const Home: React.FC<HomeProps> = async ({ searchParams }) => {
   console.log("API Response:", data);
   // Fetch second API response
   const api2: Api = {
-    url: "https://magshopify.goaideme.com/card/collection-listing",
+    url: "https://dating.goaideme.com/card/collection-listing",
     method: "GET",
   };
   const data2: ApiResponse<any> = await fetchFromServer(api2);
   console.log("Collection Listing Response:", data2.data);
-  let user = await fetch('https://magshopify.goaideme.com/user/profile', {
+  let user = await fetch('https://dating.goaideme.com/user/profile', {
     method: 'GET', // Method set to GET
     headers: {
       'Authorization': `Bearer ${token}` // Send the token in the Authorization header

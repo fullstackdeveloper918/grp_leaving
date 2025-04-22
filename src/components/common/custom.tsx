@@ -203,7 +203,7 @@ useEffect(() => {
 
     try {
       const response = await fetch(
-        "https://magshopify.goaideme.com/card/add-editor-messages",
+        "https://dating.goaideme.com/card/add-editor-messages",
         {
           method: "POST",
           headers: {
@@ -266,7 +266,7 @@ useEffect(() => {
       formData.append("file", file);
 
       const response = await fetch(
-        "https://magshopify.goaideme.com/card/update-editor-messages",
+        "https://dating.goaideme.com/card/update-editor-messages",
         {
           method: "POST",
           body: formData,
@@ -290,7 +290,7 @@ useEffect(() => {
             if (activeSlideIndex !== null) {
               const newImage = {
                 type: "image",
-                content: `https://magshopify.goaideme.com/${imageUrl}`,
+                content: `https://dating.goaideme.com/${imageUrl}`,
                 slideIndex: activeSlideIndex + 1,
                 x: 0,
                 y: 0,

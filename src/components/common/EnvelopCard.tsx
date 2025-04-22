@@ -35,7 +35,7 @@ console.log(responseData,"responseData");
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `https://magshopify.goaideme.com/card/edit-messages-by-unique-id/${id}`,
+            `https://dating.goaideme.com/card/edit-messages-by-unique-id/${id}`,
             {
               method: "GET",
               headers: {
