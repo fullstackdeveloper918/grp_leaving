@@ -15,6 +15,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import nookies from "nookies";
 import jsPDF from "jspdf";
+import Moveable from 'react-moveable';
 import Draggable from "react-draggable";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Editor } from 'react-draft-wysiwyg';
@@ -26,7 +27,6 @@ import "react-quill/dist/quill.snow.css";
 import "quill-emoji/dist/quill-emoji.css";
 import { Quill } from "react-quill";
 import "quill-emoji";
-import { toast } from "react-toastify";
 // import './MessageEditor.css';
 interface Slide {
   id: string;
@@ -94,19 +94,10 @@ const Custom: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [gifs, setGifs] = useState<string[]>([]);
-  const [activeSlide, setActiveSlide] = useState<any>();
-  console.log(activeSlide,"activeSlide");
-  // let slideIndex=activeSlide?3:0
-  // console.log(slideIndex,"slideIndex");
   const [activeSlideIndex, setActiveSlideIndex] = useState<any>(0);
-  useEffect(() => {
-    const newIndex = activeSlide ? activeSlide : 0;
-    setActiveSlideIndex(newIndex);
-  }, [activeSlide]);
   const [elements, setElements] = useState<any[]>([]);
   const [editorContent, setEditorContent] = useState("");
   const sliderRef = useRef<HTMLInputElement>(null);
-  
 console.log(id,"popo");
 
   useEffect(() => {
@@ -138,8 +129,6 @@ console.log(id,"popo");
 console.log(elements,"wertyui");
 
 const [slides, setSlides] = useState<any>([]);
-console.log(slides,"ouetouer");
-
 const pathname = usePathname();
 console.log(pathname,"pathname");
 const isEditorPath = /^\/share\/editor\/[^/]+$/.test(pathname);
@@ -225,64 +214,6 @@ useEffect(() => {
     }
 
     // Update state with the new full list of slides
-    setSlides(filledSlides);
-  }else{
-    const initialSlides = isEditorPath
-    ?  [
-        {
-          id: "slide-1",
-          title: "Development",
-          subtitle: "SCSS Only Slider",
-          text: "Learn to create a SCSS-only responsive slider.",
-          link: "https://blog.significa.pt/css-only-slider-71727effff0b",
-          card_img: SlideImg_0,
-        },
-    ]:
-      [
-        {
-          id: "slide-1",
-          title: "Development",
-          subtitle: "SCSS Only Slider",
-          text: "Learn to create a SCSS-only responsive slider.",
-          link: "https://blog.significa.pt/css-only-slider-71727effff0b",
-          card_img: SlideImg_0,
-        },
-        {
-          id: "slide-2",
-          title: "Web Design",
-          subtitle: "Creative Animations",
-          text: "Explore modern web design techniques.",
-          link: "https://medium.com/web-design",
-          card_img: SlideImg_1,
-        },
-        {
-          id: "slide-3",
-          title: "JavaScript",
-          subtitle: "Advanced ES6 Features",
-          text: "Master JavaScript ES6+ features in depth.",
-          link: "https://javascript.info/",
-          card_img: SlideImg_2,
-        },
-        {
-          id: "slide-4",
-          title: "React",
-          subtitle: "State Management",
-          text: "A guide to managing state effectively in React.",
-          link: "https://reactjs.org/docs/hooks-intro.html",
-          card_img: SlideImg_3,
-        },
-        {
-          id: "slide-5",
-          title: "Next.js",
-          subtitle: "Optimizing Performance",
-          text: "Learn Next.js best practices for fast web apps.",
-          link: "https://nextjs.org/docs/advanced-features",
-          card_img: SlideImg_4,
-        },
-      ] as any;
-
-    // Create a new array of slides that includes placeholders if needed
-    const filledSlides = [...initialSlides];
     setSlides(filledSlides);
   }
 }, []);
@@ -451,10 +382,6 @@ useEffect(() => {
     };
 
     setSlides([...slides, newSlide]);
-    setActiveSlide(slides.length + 1)
-    toast.success(`New slide added `)
-
-    // toast.success(`${slides.length + 1} slide added `)
   };
 
   const fetchImageAsBase64 = async (imageUrl: string) => {
@@ -926,7 +853,13 @@ const DraggableElement = ({
 }) => {
   const [{ x, y }, api] = useSpring(() => ({ x: initialX, y: initialY }));
   const [userInfo1, setUserInfo1] = useState<any>(null);
-
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [frame, setFrame] = useState({
+    translate: [0, 0],
+    rotate: 0,
+    width: 200,
+    height: 200,
+  });
   useEffect(() => {
     const cookies = nookies.get();
     const userInfoFromCookie: UserInfo | null = cookies.userInfo
@@ -977,17 +910,46 @@ const DraggableElement = ({
       }}
       {...bind()}
     >
-      {type === "image" || type === "gif" ? (
-        <img
-          src={content || "/placeholder.svg"}
-          alt="uploaded"
-          style={{
-            width: "100px",
-            height: "100px",
-            objectFit: "cover",
-            pointerEvents: "none",
-          }}
-        />
+     {type === "image" || type === "gif" ? (
+        <div>
+          <div
+            ref={targetRef}
+            style={{
+              width: `${frame.width}px`,
+              height: `${frame.height}px`,
+              transform: `translate(${frame.translate[0]}px, ${frame.translate[1]}px) rotate(${frame.rotate}deg)`,
+              transformOrigin: 'top left',
+              backgroundImage: `url(${content || "/placeholder.svg"})`,
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}
+          />
+          <Moveable
+            target={targetRef}
+            draggable={true}
+            resizable={true}
+            rotatable={true}
+            throttleDrag={0}
+            throttleResize={0}
+            throttleRotate={0}
+            origin={false}
+            onDrag={({ beforeTranslate }) => {
+              setFrame(prev => ({ ...prev, translate: beforeTranslate }));
+            }}
+            onResize={({ width, height, drag }) => {
+              setFrame(prev => ({
+                ...prev,
+                width,
+                height,
+                translate: drag.beforeTranslate,
+              }));
+            }}
+            onRotate={({ beforeRotate }) => {
+              setFrame(prev => ({ ...prev, rotate: beforeRotate }));
+            }}
+          />
+        </div>
       ) : (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       )}

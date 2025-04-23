@@ -1801,3 +1801,55 @@ html {
   width: 40px;
   height: 40px;
 }
+.editor-container {
+  width: 400px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Comic Sans MS', cursive;
+}
+
+.editor-wrapper {
+  border: 1px solid #00bcd4;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.editor-toolbar {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.editor-input {
+  padding: 10px;
+  min-height: 100px;
+  border: none;
+  font-size: 16px;
+  color: teal;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.save-btn {
+  background-color: #001f7f;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
