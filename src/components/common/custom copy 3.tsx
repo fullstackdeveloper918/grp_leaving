@@ -145,51 +145,9 @@ const pathname = usePathname();
 console.log(pathname,"pathname");
 const isEditorPath = /^\/share\/editor\/[^/]+$/.test(pathname);
 console.log(isEditorPath,"isEditorPath");
-const defaultSlides=[
-  {
-    id: "slide-1",
-    title: "Development",
-    subtitle: "SCSS Only Slider",
-    text: "Learn to create a SCSS-only responsive slider.",
-    link: "https://blog.significa.pt/css-only-slider-71727effff0b",
-    card_img: SlideImg_0,
-  },
-  {
-    id: "slide-2",
-    title: "Web Design",
-    subtitle: "Creative Animations",
-    text: "Explore modern web design techniques.",
-    link: "https://medium.com/web-design",
-    card_img: SlideImg_1,
-  },
-  {
-    id: "slide-3",
-    title: "JavaScript",
-    subtitle: "Advanced ES6 Features",
-    text: "Master JavaScript ES6+ features in depth.",
-    link: "https://javascript.info/",
-    card_img: SlideImg_2,
-  },
-  {
-    id: "slide-4",
-    title: "React",
-    subtitle: "State Management",
-    text: "A guide to managing state effectively in React.",
-    link: "https://reactjs.org/docs/hooks-intro.html",
-    card_img: SlideImg_3,
-  },
-  {
-    id: "slide-5",
-    title: "Next.js",
-    subtitle: "Optimizing Performance",
-    text: "Learn Next.js best practices for fast web apps.",
-    link: "https://nextjs.org/docs/advanced-features",
-    card_img: SlideImg_4,
-  },
-] as any;
+
 useEffect(() => {
   const storedElements = localStorage.getItem("slideElements");
-console.log(storedElements,"storedElements");
 
   if (storedElements) {
     const parsed = JSON.parse(storedElements);
@@ -270,7 +228,63 @@ console.log(storedElements,"storedElements");
     // Update state with the new full list of slides
     setSlides(filledSlides);
   }else{
-    setSlides(defaultSlides);
+    const initialSlides = isEditorPath
+    ?  [
+        {
+          id: "slide-1",
+          title: "Development",
+          subtitle: "SCSS Only Slider",
+          text: "Learn to create a SCSS-only responsive slider.",
+          link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+          card_img: SlideImg_0,
+        },
+    ]:
+      [
+        {
+          id: "slide-1",
+          title: "Development",
+          subtitle: "SCSS Only Slider",
+          text: "Learn to create a SCSS-only responsive slider.",
+          link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+          card_img: SlideImg_0,
+        },
+        {
+          id: "slide-2",
+          title: "Web Design",
+          subtitle: "Creative Animations",
+          text: "Explore modern web design techniques.",
+          link: "https://medium.com/web-design",
+          card_img: SlideImg_1,
+        },
+        {
+          id: "slide-3",
+          title: "JavaScript",
+          subtitle: "Advanced ES6 Features",
+          text: "Master JavaScript ES6+ features in depth.",
+          link: "https://javascript.info/",
+          card_img: SlideImg_2,
+        },
+        {
+          id: "slide-4",
+          title: "React",
+          subtitle: "State Management",
+          text: "A guide to managing state effectively in React.",
+          link: "https://reactjs.org/docs/hooks-intro.html",
+          card_img: SlideImg_3,
+        },
+        {
+          id: "slide-5",
+          title: "Next.js",
+          subtitle: "Optimizing Performance",
+          text: "Learn Next.js best practices for fast web apps.",
+          link: "https://nextjs.org/docs/advanced-features",
+          card_img: SlideImg_4,
+        },
+      ] as any;
+
+    // Create a new array of slides that includes placeholders if needed
+    const filledSlides = [...initialSlides];
+    setSlides(filledSlides);
   }
 }, []);
 
@@ -561,7 +575,6 @@ console.log(storedElements,"storedElements");
   };
 
   console.log(slides,"slides");
-  console.log(showModal,"showModal");
   
 
   return (
@@ -581,11 +594,8 @@ console.log(storedElements,"storedElements");
               Add Message
             </button>
           </div>
-          {showModal ==true ?"":
-          <>
           <div className="search_input">
             <input
-            
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
@@ -626,8 +636,6 @@ console.log(storedElements,"storedElements");
           </button>
         </div>
           )}
-          </>
-          }
           {/* <div style={{ textAlign: "center" }}>
             <button style={{
               padding: "10px",
@@ -1001,7 +1009,7 @@ const DraggableElement: React.FC<any> = ({
         type === "image" || type === "gif"
           ? "flex items-center justify-center border border-gray-300 bg-gray-100"
           : ""
-      }fdgdf`}
+      }`}
     >
       {type === "image" || type === "gif" ? (
         
