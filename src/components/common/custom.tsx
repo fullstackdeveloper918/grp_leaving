@@ -307,6 +307,17 @@ console.log(storedElements,"storedElements");
   };
 
   const handleAddMessageClick = () => {
+    const newSlide = {
+      id: `slide-${slides.length + 1}`,
+      title: "New Slide",
+      subtitle: "New Subtitle",
+      text: "This is a new slide",
+      link: "https://example.com",
+      // card_img: SlideImg_5,
+    };
+
+    setSlides([...slides, newSlide]);
+    setActiveSlide(slides.length + 1)
     setShowModal(true);
   };
 
