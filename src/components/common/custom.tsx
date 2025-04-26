@@ -85,7 +85,37 @@ const initialSlides = [
     card_img: SlideImg_4,
   },
 ];
-const Custom: React.FC = () => {
+const Custom: any= () => {
+// const Custom: any= ({slideData}:any) => {
+  // console.log(slideData,"slideData");
+  const { id1 } = useParams(); 
+const [responseData, setResponseData] = useState<any>([]);
+console.log(responseData,"asdfertwer");
+
+   useEffect(() => {
+      if (id1) {
+        const fetchData = async () => {
+          try {
+            const response = await fetch(
+              `https://dating.goaideme.com/card/edit-messages-by-unique-id/${id1}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+  
+            const data = await response.json();
+            setResponseData(data); // Store response data in state
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+  
+        fetchData();
+      }
+    }, []);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const router = useRouter();
   const params = useParams();
@@ -145,59 +175,74 @@ const pathname = usePathname();
 console.log(pathname,"pathname");
 const isEditorPath = /^\/share\/editor\/[^/]+$/.test(pathname);
 console.log(isEditorPath,"isEditorPath");
-const defaultSlides=[
-  {
-    id: "slide-1",
-    title: "Development",
-    subtitle: "SCSS Only Slider",
-    text: "Learn to create a SCSS-only responsive slider.",
-    link: "https://blog.significa.pt/css-only-slider-71727effff0b",
-    card_img: SlideImg_0,
-  },
-  {
-    id: "slide-2",
-    title: "Web Design",
-    subtitle: "Creative Animations",
-    text: "Explore modern web design techniques.",
-    link: "https://medium.com/web-design",
-    card_img: SlideImg_1,
-  },
-  {
-    id: "slide-3",
-    title: "JavaScript",
-    subtitle: "Advanced ES6 Features",
-    text: "Master JavaScript ES6+ features in depth.",
-    link: "https://javascript.info/",
-    card_img: SlideImg_2,
-  },
-  {
-    id: "slide-4",
-    title: "React",
-    subtitle: "State Management",
-    text: "A guide to managing state effectively in React.",
-    link: "https://reactjs.org/docs/hooks-intro.html",
-    card_img: SlideImg_3,
-  },
-  {
-    id: "slide-5",
-    title: "Next.js",
-    subtitle: "Optimizing Performance",
-    text: "Learn Next.js best practices for fast web apps.",
-    link: "https://nextjs.org/docs/advanced-features",
-    card_img: SlideImg_4,
-  },
-] as any;
+const defaultSlides=isEditorPath
+?  [
+    {
+      id: "slide-1",
+      title: "Development",
+      subtitle: "SCSS Only Slider",
+      text: "Learn to create a SCSS-only responsive slider.",
+      link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+      card_img: SlideImg_0,
+    },
+]:
+  [
+    {
+      id: "slide-1",
+      title: "Development",
+      subtitle: "SCSS Only Slider",
+      text: "Learn to create a SCSS-only responsive slider.",
+      link: "https://blog.significa.pt/css-only-slider-71727effff0b",
+      card_img: SlideImg_0,
+    },
+    {
+      id: "slide-2",
+      title: "Web Design",
+      subtitle: "Creative Animations",
+      text: "Explore modern web design techniques.",
+      link: "https://medium.com/web-design",
+      card_img: SlideImg_1,
+    },
+    {
+      id: "slide-3",
+      title: "JavaScript",
+      subtitle: "Advanced ES6 Features",
+      text: "Master JavaScript ES6+ features in depth.",
+      link: "https://javascript.info/",
+      card_img: SlideImg_2,
+    },
+    {
+      id: "slide-4",
+      title: "React",
+      subtitle: "State Management",
+      text: "A guide to managing state effectively in React.",
+      link: "https://reactjs.org/docs/hooks-intro.html",
+      card_img: SlideImg_3,
+    },
+    {
+      id: "slide-5",
+      title: "Next.js",
+      subtitle: "Optimizing Performance",
+      text: "Learn Next.js best practices for fast web apps.",
+      link: "https://nextjs.org/docs/advanced-features",
+      card_img: SlideImg_4,
+    },
+  ] as any;
+
 useEffect(() => {
-  const storedElements = localStorage.getItem("slideElements");
+  const storedElements:any = localStorage.getItem("slideElements");
 console.log(storedElements,"storedElements");
 
-  if (storedElements) {
+  if (storedElements ||responseData) {
     const parsed = JSON.parse(storedElements);
     // setParsedElements(parsed); // assuming you use this elsewhere
 
     // Get max slideIndex from parsed elements
-    const maxIndex = Math.max(...parsed.map((el: any) => el.slideIndex));
+    let maxIndex = 0;
 
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      maxIndex = Math.max(...parsed.map((el: any) => el?.slideIndex ?? 0));
+    }
     // Define initial slides (your default slides)
     const initialSlides = isEditorPath
     ?  [
@@ -270,6 +315,7 @@ console.log(storedElements,"storedElements");
     // Update state with the new full list of slides
     setSlides(filledSlides);
   }else{
+
     setSlides(defaultSlides);
   }
 }, []);
@@ -706,9 +752,12 @@ console.log(storedElements,"storedElements");
                     //   initialHeight={el.height || 80}
                     // /> */}
                     {index === activeSlideIndex &&
-                     elements
-                     .filter((el) => el.slideIndex === activeSlideIndex)
-                     .map((el, i) => {
+                    //  slideData?.data[0]?.editor_messages
+                    elements
+                     .filter((el:any) => el.slideIndex === activeSlideIndex)
+                     .map((el:any, i:any) => {
+                      console.log(el,"sasa");
+                      
                        const originalIndex = elements.findIndex((e) => e === el);
                        return (
                          <DraggableElement
